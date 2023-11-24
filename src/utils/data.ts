@@ -1,0 +1,2 @@
+export const Category:string[]=["Shopping","Grocery","Daily essentials","Miscellaneous","Other","Bill Payment","Travel","Food"]; 
+export const IncomeCategory:string[]=["Income from salary","Income from house property","Income from profits and gains from business","Income from capital gains","Income from other sources"];

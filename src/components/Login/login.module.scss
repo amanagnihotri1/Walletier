@@ -1,0 +1,66 @@
+.loginbackground
+{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: url("../../assets/circlemain.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+.loginWrapper
+{
+    width: 60vw;
+    height: 68vh;
+    padding: 10px 30px;
+    background-color: #f77f00;
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 16px;
+    box-shadow: 0px 1px 1px rgba(3, 7, 18, 0.01),
+0px 5px 2px rgba(3, 7, 18, 0.01),
+0px 12px 5px rgba(3, 7, 18, 0.01),
+0px 20px 10px rgba(3, 7, 18, 0.01),
+0px 32px 15px rgba(3, 7, 18, 0.01);
+
+.leftForm
+{
+    height: 100%;
+    width: 40%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-top: 40px;
+    gap: 10px;
+
+    :global(.mantine-InputWrapper-label)
+    {
+     color: white;
+    } 
+ .logButton
+ {
+    background-color: #FFF;
+    color: violet;
+ }  
+.headingTitle
+{
+    color: white;
+    font-weight: 700;
+    font-size: 42px;
+}
+}
+.rightSVG
+{
+    width: 60%;
+    height: 100%;
+    object-fit: cover;
+img
+{
+    width: 100%;
+    height: 100%;
+}
+}
+}
+
+}

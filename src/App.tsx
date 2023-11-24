@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
+import "@mantine/core/styles/global.css";
+import React,{useEffect} from 'react';
 import './App.css';
-
-function App() {
+import { Login } from './components/Login/Login';
+import { Home } from './pages/Home';
+import { store } from './app/store';
+import { UserData } from './app/TypeInterfaces';
+import { getAuth } from 'firebase/auth';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  BrowserRouter,
+  Route,
+  Link,
+} from "react-router-dom";
+import {Provider} from 'react-redux';
+import { Signup } from './components/Signup/Signup';
+import { authSlice, clearAuthDetails, setAuthDetails } from './Auth/authSlice';
+import { useSelector,useDispatch } from 'react-redux';
+import {GoogleAuthProvider,signInWithPopup} from "firebase/auth";
+function App() 
+{
+  const router=createBrowserRouter([
+  {
+    path:"/login",
+    element:<Login/>,
+  },
+  {
+    path:'/',
+    element:<Home/>,
+  },
+  {
+    path:"/signup",
+    element:<Signup/>,
+  }
+  ]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+    <RouterProvider router={router}/> 
+    </Provider>
   );
 }
-
 export default App;

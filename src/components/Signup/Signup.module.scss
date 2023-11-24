@@ -1,0 +1,116 @@
+.formWrapper
+{
+    width: 100vw;
+    height: 100vh;
+    background-image: url("../../assets/blob-scene-haikei.png");
+    background-repeat: no-repeat;
+    background-size:cover;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+    padding: 0px;
+    margin: 0px;
+.brandWrapper
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 60px;
+    width: auto;
+    gap: 20px;
+    margin:30px 0px;
+  h2
+  {
+    font-weight: 600;
+    height: 100%;
+    margin: 0;
+    text-align: center;
+    padding: 20px 0px;
+  }
+    .brandInfo
+    {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        img
+        {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}    
+.formContainer  
+{ 
+    width: 80%;  
+    border-radius: 16px;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap:wrap;
+    gap: 0;
+    margin: 0 auto;
+    box-shadow: 0px 1px 1px rgba(3, 7, 18, 0.01),
+    0px 5px 2px rgba(3, 7, 18, 0.01),
+    0px 12px 5px rgba(3, 7, 18, 0.01),
+    0px 20px 10px rgba(3, 7, 18, 0.01),
+    0px 32px 15px rgba(3, 7, 18, 0.01);
+.leftSide
+{
+    display: flex;
+    height: auto;
+    width: 60%;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px 30px;
+   .buttonStyle
+   {
+    letter-spacing: 0.34px;
+    margin: 10px 0px;
+}
+.titleMain
+{
+    font-weight: 700;
+    font-size: 2.4rem;
+    font-family: 'Poppins',sans-serif;
+}
+}    
+}
+.imgWrapper
+{ 
+    height:auto;
+    object-fit: cover;
+    width: 40%;
+    border-radius: 16px;   
+}
+img
+{
+    width: 100%;
+    height: auto;
+}
+}
+@media (max-width:48em) {
+.formContainer
+{
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px auto;
+  height: auto;
+  width: 100%;
+  padding: 0;
+  height: 64vh;
+}
+.leftSide
+{
+    width: 100%;
+    height: auto;
+    gap: 0px;
+}
+.imgWrapper
+{
+    width: 100%;
+    height: 100%;
+}
+  }

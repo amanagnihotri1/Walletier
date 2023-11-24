@@ -1,0 +1,39 @@
+.cardWrapper
+{
+    width: auto;
+    height: auto;
+    display:flex;
+    flex-wrap: wrap;
+    border-radius: 12px;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin: 0px;
+
+
+.incomeTile
+{
+    width: 260px;
+    height: 240px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 20px 14px;
+    .tileIcon
+    {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+    img
+    {
+        width: 100%;
+        height: 100%;
+    }   
+    }
+    .textHeading
+    {
+      font-weight: 600;
+      font-size: 18px;
+    }
+}    
+}

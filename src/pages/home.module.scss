@@ -1,0 +1,66 @@
+.mainWrapper
+{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    background-color: #e9ecef;  
+.subWrapper
+{
+  width: 80%;
+  height: auto;
+
+.leftWrapper
+{
+    width: 100%;
+    display: flex;
+    height: auto;
+    padding: 10px 6px;
+.leftWrap
+{
+    width: 70%;
+    height: auto;
+}
+} 
+.rightWrap
+{
+    height: fit-content;
+    width: 30%; 
+    padding: 0px 0px;  
+.expense-graph
+{
+        width: 95%;
+        height:240px;
+        padding: 10px 15px;
+        margin-top: 0px;
+        margin-left: 10px;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 12px; 
+.textHeading
+{
+    font-weight: 600;
+    font-size: 18px;
+}
+.recharts-responsive-container.recharts-wrapper
+{
+    width: 30% !important;
+    height: 70% !important;
+    left: 10px;
+}
+    }
+}
+.userBanner
+{
+    font-weight: 700;
+    font-size: 24px;
+    width: 100%;
+    padding-left: 25px;
+p
+{
+    font-size: 14px;
+    font-weight: 500;
+}
+}
+}
+}

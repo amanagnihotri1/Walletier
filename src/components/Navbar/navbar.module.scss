@@ -1,0 +1,92 @@
+.menuList
+{
+    width: 20vw;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    background-color: #edf0f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 8px;  
+.logoWrapper
+{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  object-fit: cover;
+  height: 30px;
+  margin-left: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-weight: 700;
+  gap: 10px;
+  .logoimgWrapper
+  {
+    width: 30px;
+    height: auto;
+    object-fit: cover;
+  }
+  h4
+{
+  margin-top:30px;
+  flex-basis: 2/3;
+}  
+img
+{
+  width: 30px;
+  height: auto;
+}
+}    
+.menuItem
+{
+ text-align: left;
+ border-radius: 4px;
+ padding-left: 40px;
+ padding: 20px 20px;
+ font-size: 24px;
+
+}      
+.logButton
+{
+  width: 100%;
+}    
+.roundedButton
+{
+  width: 100%;
+  height: 60px;
+  display: flex;
+  position: absolute;
+  justify-content:space-around;
+  padding: 10px 0px;
+  top: 30px;
+  align-items: center;
+  gap: 20px;
+  .group
+  {
+     width: auto;
+     display: flex;
+     align-items: center;
+     gap: 8px;
+  }
+  h3
+ {
+  font-weight: 500;
+ } 
+}
+.usericon
+{
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  object-fit: cover;
+img
+{
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+}
+}
+}

@@ -22,5 +22,6 @@
   },
   "include": [
     "src"
-  ]
+, "src/components/Signup", "src/components/Login"  ],
+  "exclude": ["node_modules"],
 }
