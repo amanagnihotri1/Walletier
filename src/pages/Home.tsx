@@ -1,52 +1,57 @@
-import React, { useEffect, useState } from 'react';
+import React,{ useEffect,useState } from 'react';
 import '@mantine/core/styles/global.css';
 import '@mantine/core/styles/Button.css';
 import '@mantine/core/styles/UnstyledButton.css';
 import style from "../pages/home.module.scss";
+import '@mantine/core/styles/Text.css';
 import { getAuth,onAuthStateChanged,signOut,updateProfile} from 'firebase/auth';
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Legend } from 'recharts';
 import { auth } from '../Auth/firebaseAuth';
-import { Login } from '../components/Login/Login';
-import { useLocation } from 'react-router-dom';
-import { UserData } from '../app/TypeInterfaces';
+import  OpenAIApi from "openai";
+import { ActionIcon } from '@mantine/core';
+import upImage from "../assets/upload.png";
 import { Navbar } from '../components/Navbar/Navbar';
 import { useSelector,useDispatch } from 'react-redux';
 import { Transactions } from '../components/Transactions/Transactions';
-import { clearAuthDetails, setAuthDetails, setError } from '../Auth/authSlice';
+import botimages from "../assets/chatbotimages.png";
+import { clearAuthDetails, setAuthDetails } from '../Auth/authSlice';
 import { Cardgroup } from '../components/cardGroup/Cardgroup';
-import { Button, Card,List,ColorSwatch } from '@mantine/core';
+import { TextInput } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 export const Home = () => {
   const dispatch=useDispatch();
   const navigate=useNavigate();
-  const location=useLocation();
-  const store=useSelector((state:any)=>state.authReducer);
-  const[isLoggedin,setLoggedin]=useState(false);
-  const userEmail=useSelector((state:any)=>state.authReducer.email);
+  const[uid,setUid]=useState<string>();
   const userfullName=useSelector((state:any)=>state.authReducer.fullName);
-  const data2 = [
-    { name: 'Group A', value: 400 },
-    { name: 'Group B', value: 300 },
-    { name: 'Group C', value: 300 },
-    { name: 'Group D', value: 200 },
-  ];
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const openai = new OpenAIApi({
+  apiKey: `${process.env.REACT_APP_OPENAI_API_KEY}`,
+  dangerouslyAllowBrowser:true 
+});
+  const handleSubmit = async (e:any) => {
+    try {
+      const completion = await openai.chat.completions.create({
+        messages: [{ role: "system", content:e.target.value}],
+        model: "gpt-3.5-turbo",
+      });
+      console.log(completion);
+    }catch (error: any) {
+            console.error(error);
+    }
+  };
   useEffect(()=>
-  {
-      onAuthStateChanged(auth,(user:any) => {
+  {  
+    onAuthStateChanged(auth,(user:any) => {
       if (user) 
       { 
         console.log(user);
-        dispatch(setAuthDetails({fullName:user?.displayName,useremail:user?.email}));
+        dispatch(setAuthDetails({fullName:user?.displayName,useremail:user?.email,uid:user.uid}));
        updateProfile(user,{displayName:userfullName}); 
+       setUid(user.uid);
       } else {
         dispatch(clearAuthDetails());
         navigate("/login");
       }
     });
-  });
-  
-  console.log(location.state);
+  },[]);
   const handleLogout=()=>
   {
     const auth=getAuth();
@@ -60,44 +65,35 @@ export const Home = () => {
     <div className={style['subWrapper']}>
     <div className={style['userBanner']}>
      Welcome,{userfullName}
-     <p>Our Expense tracker is AI based</p> 
+     <p
+      style={{
+        margin:'0px',
+        fontWeight:'500',
+        fontSize:'12px',
+      }}
+     >Now handle your expenses at ease</p>
     </div>
     <div className={style['leftWrapper']}>
     <div className={style['leftWrap']}>
     <Cardgroup/>
-    <Transactions/>
-    </div>
-    <div className={style['rightWrap']}>
-    <div className={style['expense-graph']}>
-     <div className={style['textHeading']}>Expense Analysis</div>
-     <ResponsiveContainer>
-     <PieChart width={600} height={400}
-     >
-        <Pie
-          data={data2}
-          cx={80}
-          cy={80}
-          innerRadius={67}
-          outerRadius={80}
-          fill="#8884d8"
-          paddingAngle={3}
-          cornerRadius={100}
-          dataKey="value"
-          isAnimationActive={true}
-          >
-          {data2.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
-          ))}
-        </Pie> 
-      </PieChart>
-          </ResponsiveContainer>
-    <List>
-     <List.Item>
-     <ColorSwatch color="#009790" />
-      </List.Item> 
-    </List>
+    <div className={style['tableWrapper2']}>
+    <Transactions useid={uid?.toString()}/>
+    <div className={style['chatbotBox']}>
+    <img src={botimages} alt="not_found" />
+     <h4 style={{color:'#FFF',textAlign:'center'}}>Hii,How can i help you?</h4>
+    <form className={style["chatWrapper"]} onSubmit={handleSubmit}>
+    <TextInput
+      placeholder="Start Chat"
+      rightSection={
+        <ActionIcon size={34} variant="default" aria-label="ActionIcon with size as a number" type="submit">
+      <img src={upImage} alt='not_found'/>
+    </ActionIcon>
+     }
+     />
+    </form>
     </div> 
     </div>
+     </div>
     </div>
     </div>
     </div>

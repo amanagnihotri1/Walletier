@@ -1,12 +1,12 @@
 
 import '@mantine/core/styles/Notification.css';
-import React,{useEffect, useState} from 'react';
+import React,{useState} from 'react';
 import '@mantine/core/styles/Loader.css';
-import { getAuth,signInWithEmailAndPassword,onAuthStateChanged,updateProfile } from 'firebase/auth';
+import { getAuth,signInWithEmailAndPassword } from 'firebase/auth';
 import { TextInput,PasswordInput,Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate,Link, useNavigate } from 'react-router-dom';
+import { useDispatch} from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import style from "../Login/login.module.scss";
 import rocketImage from "../../assets/business-startup.png";
 import { notifications } from '@mantine/notifications';
@@ -14,7 +14,6 @@ import { setAuthDetails } from '../../Auth/authSlice';
 export const Login= () => {
  const navigate=useNavigate();
  const dispatch=useDispatch();
- const store=useSelector((state:any)=>state.authReducer);
  const[visible,{toggle}]=useDisclosure(false);
  const[userinfo,setUserInfo]=useState<{email:string; password:string}>({
   email:'',
@@ -29,7 +28,8 @@ const handleClick=async()=>
        const userCred=await signInWithEmailAndPassword(auth,email,password);
        const usermain = userCred.user;
        console.log(auth.currentUser);
-       dispatch(setAuthDetails({useremail:usermain?.email,fullName:usermain?.displayName}));
+       dispatch(setAuthDetails({useremail:usermain?.email,fullName:usermain?.displayName,uid:usermain.uid}));
+
        usermain && navigate("/");
        notifications.show({title:"Success",message:"User loggedin successfully"});
       }

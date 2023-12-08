@@ -1,5 +1,5 @@
-import React from 'react';
-import { Drawer,List,Badge, NavLink,Button,Divider,ActionIcon } from '@mantine/core';
+import React,{useState} from 'react';
+import { NavLink,Divider,ActionIcon} from '@mantine/core';
 import '@mantine/core/styles/global.css';
 import '@mantine/core/styles.css';
 import '@mantine/core/styles/Divider.css';
@@ -8,23 +8,54 @@ import '@mantine/core/styles/ActionIcon.css'
 import '@mantine/core/styles/NavLink.css';
 import style from "../../components/Navbar/navbar.module.scss";
 import exitImage from "../../assets/logout.png"
-import { UserData } from '../../app/TypeInterfaces';
-import { clearAuthDetails,setError } from '../../Auth/authSlice';
-import reportImage from "../../assets/report.png";
-import savingsImage from "../../assets/savings.png";
-import { useDisclosure } from '@mantine/hooks';
-import newsImage from "../../assets/news.png";
-import homeImage from "../../assets/home.png";
+import {ReactComponent as GenReports} from "../../assets/genreports.svg";
+import {ReactComponent as GoalGenerator} from "../../assets/creategoal.svg";
+import {ReactComponent as HomeImage} from "../../assets/house.svg";
 import brandLogo from "../../assets/wallet.png";
-import { useDispatch,useSelector } from 'react-redux';
+import {ReactComponent as LearnMore} from "../../assets/learnmore.svg";
+import {useSelector } from 'react-redux';
 export const Navbar = ({signout}:{signout:()=>void}) => {
-  const[opened,{open,close}]=useDisclosure(false);
-  const dispatch=useDispatch();
+  const [active, setActive] = useState<number>(0);
   const userName=useSelector((state:any)=>state.authReducer.fullName);
   const userprofile=useSelector((state:any)=>state.authReducer.profileImage);
-    return (
+  const data:{icon:any,label:string; leftSection?:JSX.Element | undefined, size?:string; stroke?:number}[]=[
+  { icon: HomeImage, label: 'Default'},
+  {
+    icon:GoalGenerator,
+    label: 'Create Goal',
+  },
+  { icon:GenReports, 
+    label:"Generate Report",
+  },
+  {
+    icon:LearnMore,
+    label: 'Learn more',
+  },
+];
+  return (
       <div className={style["menuList"]}>
-      <div className={style["roundedButton"]}>
+        <div className={style['linkWrapper']}>
+        <div className={style["logoWrapper"]}>
+        <div className={style["logoimgwrapper"]}>
+        <img src={brandLogo} alt="not_found" />
+        </div>
+        <h4
+        style={{fontWeight:'600'}}
+        >Walletier</h4>
+        </div>
+    <Divider  w={"100%"}/>
+     {data?.map((item:any,index:number)=>(
+      <NavLink label={item.label} 
+       className={style["menuItem"]} 
+       leftSection={<item.icon size={"0.6rem"} stroke={1.8}/>}
+       active={index===active} 
+       onClick={()=>setActive(index)}
+        /> 
+      ))
+      } 
+     </div>
+      <Divider  w={"100%"} mb={"40px"}/>
+     <div className={style["roundedButton"]}>
       <div className={style["group"]}>
       <div className={style["usericon"]}>
     <img src={userprofile} alt="not_found" />
@@ -35,23 +66,6 @@ export const Navbar = ({signout}:{signout:()=>void}) => {
     <img src={exitImage} alt="" width={"16px"} height={'16px'}/>
     </ActionIcon>
     </div>
-     <NavLink label="Default" className={style["menuItem"]} leftSection={<img src={homeImage} alt="not found" width={"30px"} height={"30px"}
-     />} /> 
-     <NavLink label="Goal Generator" className={style["menuItem"]} leftSection={<img src={savingsImage} width={"30px"} height={"30px"} alt="not found"/>} /> 
-     <NavLink label="Generate reports" className={style["menuItem"]} leftSection={<img src={reportImage} width={"30px"} height={"30px"} alt="not found"/>} /> 
-     <NavLink label="Learn more" className={style["menuItem"]} leftSection={<img src={newsImage} width={"30px"} height={"30px"} alt="not found"/>} /> 
-      <div className={style["logoWrapper"]}>
-        <p style={{
-        fontWeight:'500',
-        fontSize:'12px',  
-        }}>Powered by</p>
-        <div className={style["logoimgwrapper"]}>
-        <img src={brandLogo} alt="not_found" />
-        </div>
-        <h4
-        style={{fontWeight:'600'}}
-        >Walletier</h4>
-        </div>
      </div> 
   )
 }

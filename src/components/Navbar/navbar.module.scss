@@ -1,23 +1,49 @@
 .menuList
 {
-    width: 20vw;
+    width: 18vw;
     height: 100vh;
     position: sticky;
     top: 0;
-    background-color: #edf0f0;
     display: flex;
+    background-color: #ffffff;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    padding: 0px 8px;  
+    padding: 0px 8px;
+    border-right: 2px solid #dee2e6; 
+ :global(.mantine-Divider-root)
+ {
+  height: 2vw;
+ } 
+ .linkWrapper
+{
+  width: 100%;
+  height: 50%;
+  align-self: flex-start;   
+.menuItem
+{
+ text-align: left;
+ border-radius: 4px;
+ padding-left: 40px;
+ padding: 10px 20px;
+ gap: 15px;
+ margin-top: 6px;
+ font-size: 12px;
+:global(.mantine-NavLink-section)
+{
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+}
+}       
 .logoWrapper
 {
   width: 100%;
-  position: absolute;
-  bottom: 0;
+  left: 10px;
   object-fit: cover;
   height: 30px;
-  margin-left: 20px;
+  margin: 30px 20px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -31,7 +57,7 @@
   }
   h4
 {
-  margin-top:30px;
+  margin-top: 25px;
   flex-basis: 2/3;
 }  
 img
@@ -39,16 +65,8 @@ img
   width: 30px;
   height: auto;
 }
-}    
-.menuItem
-{
- text-align: left;
- border-radius: 4px;
- padding-left: 40px;
- padding: 20px 20px;
- font-size: 24px;
-
-}      
+} 
+     
 .logButton
 {
   width: 100%;
@@ -59,17 +77,18 @@ img
   height: 60px;
   display: flex;
   position: absolute;
-  justify-content:space-around;
-  padding: 10px 0px;
-  top: 30px;
+  font-size: 12px;
+  justify-content:space-between;
+  padding: 10px 20px;
   align-items: center;
   gap: 20px;
+  bottom: 0px;
   .group
   {
      width: auto;
      display: flex;
      align-items: center;
-     gap: 8px;
+     gap: 10px;
   }
   h3
  {

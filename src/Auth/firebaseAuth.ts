@@ -1,8 +1,6 @@
 import { initializeApp} from 'firebase/app';
-import {getAnalytics} from "firebase/analytics";
 import { getAuth } from 'firebase/auth';
-import { getDatabase } from "firebase/database";
-import {getStorage} from "firebase/storage";
+import { getFirestore } from 'firebase/firestore';
 export const firebaseConfig=
 {
     apiKey:process.env.REACT_APP_API_KEY,
@@ -11,9 +9,8 @@ export const firebaseConfig=
     storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
     messagingSenderId:process.env.REACT_APP_SENDER_ID,
     appId: process.env.REACT_APP_APP_ID, 
-    databaseURL:"https://DATABASE_NAME.firebaseio.com" 
+    measurementId: "G-TJQJ11TRYD"
 }
 export const app = initializeApp(firebaseConfig);
-export const database = getDatabase(app);
+export const database = getFirestore(app);
 export const auth=getAuth();
-export const storage=getStorage();

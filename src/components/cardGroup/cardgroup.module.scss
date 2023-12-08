@@ -4,21 +4,40 @@
     height: auto;
     display:flex;
     flex-wrap: wrap;
-    border-radius: 12px;
+    border-radius: 8px;
     align-items: center;
-    gap: 10px;
-    justify-content: center;
+    gap: 5px;
+    justify-content: space-evenly;
     margin: 0px;
-
-
-.incomeTile
-{
-    width: 260px;
-    height: 240px;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    padding: 20px 14px;
+    .savingTile
+    {
+        
+        background: radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%);
+    }
+    .incomeTile
+    {
+        width: 250px;
+        height: 250px;
+        border: 2px solid #dee2e6;
+        border-radius: 12px;
+        padding: 20px 14px;
+        position: relative;
+        .expandimg
+        {
+            object-fit: contain;
+            right: 0px;
+            top: 10px;
+            color: #000;
+            position: absolute;
+            width: 30px;
+            height: 30px;
+        }
+        .saveinfo
+        {
+            display: flex;
+            gap: 10px;
+            align-items: center;    
+        }
     .tileIcon
     {
         width: 40px;
@@ -35,5 +54,81 @@
       font-weight: 600;
       font-size: 18px;
     }
+.savingWrapper
+{
+    
+    height: 50%;
+    float: right;
+img
+{
+    width: 100%;
+    height: 100%;
+}
+}
+}
+.saveinfomin
+{
+    display: flex;
+    height: 100%;
+    width: 100%;
+.catelist
+{
+  font-size: 12px;
+  height: auto;
+  width: 70%;
+  font-weight: bold;
+  color: rgb(0, 0, 0); 
+  width: 50%;
+}   
+}
+.expense-graph
+{
+        width: 360px;
+        height:240px;
+        padding: 10px 5px;
+        margin-top: 0px;
+        margin-left: 5px;
+        border: 2px solid #dee2e6;
+        border-radius: 12px; 
+        position: relative;        
+.textHeading
+{
+    font-weight: 600;
+    font-size: 18px;
+    margin-left: 10px;
+}
+:global(.mantine-List-root)
+{
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    width: auto;
+    height: auto;
+}
+:global(.mantine-List-item)
+{
+    width: 100%;
+    display: flex;
+}
+:global(.recharts-responsive-container>.recharts-wrapper)
+{
+    display: inline-block;
+    width: 60% !important;
+    margin-top: 30px;
+    margin-left: 20px;
+    height: 60% !important;
+}
 }    
+}
+:global(.mantine-Badge-root)
+{
+    height: 20%;
+    width: 120px;
+    background-color: violet;
+}
+:global(.mantine-Badge-label)
+{   
+    font-size: 10px;
+    letter-spacing: 0.34px;
+    font-weight: 500;
 }
