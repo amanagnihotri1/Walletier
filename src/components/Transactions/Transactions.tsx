@@ -10,29 +10,27 @@ import style from "../Transactions/transaction.module.scss";
 import delImage from "../../assets/trash.png";
 import { TableData } from '../../app/TypeInterfaces';
 import {database,auth} from "../../Auth/firebaseAuth";
-import { collection,addDoc,getDocs } from 'firebase/firestore';
+import { collection,addDoc,getDocs,deleteDoc} from 'firebase/firestore';
 import { query,where } from 'firebase/firestore';
 import { useDispatch,useSelector } from 'react-redux';
 import addImage from "../../assets/plus.png";
 import { useDisclosure } from '@mantine/hooks';
 import formatDate from '../../utils/formatDate';
 import {setTableData } from './transactionSlice';
-import { handleDelete } from '../../utils/data';
 import {setExpense, setIncome, setSavings } from '../cardGroup/cardSlice';
 import {Table,Button,SegmentedControl,Modal,Select,Tabs, NumberInput,Transition} from '@mantine/core';
 export const collectionRef=collection(database,"Bill_list");
-export const Transactions = ({useid}:{useid:any}) => {
+export const Transactions = () => {
   const dispatch=useDispatch();
   const incomeData=useSelector((state:any)=>state.cardSlice.income);
   const expenseData=useSelector((state:any)=>state.cardSlice.expenses);
+  const tableVal=useSelector((state:any)=>state.transReducer.expenseList);
   const authuid=useSelector((state:any)=>state.authReducer.uid);
   const collectionRef=collection(database,"Bill_list");
-  const[type,setType]=useState<string | null>("Expense");
+  const[type,setType]=useState<string |null>("Expense");
   const[amount,setAmount]=useState<string | number>(0);
-  const[category,setCategory]=useState<string | null>('');
+  const[category,setCategory]=useState<string>("");
   const[tid,setTid]=useState(uuidv4());
-  const[backDate,setBackDate]=useState();
-  const tableVal=useSelector((state:any)=>state.transReducer.expenseList);
   const [opened, { open, close }] = useDisclosure(false);
   const handleSubmit=async(e:any)=>
  { 
@@ -43,118 +41,128 @@ export const Transactions = ({useid}:{useid:any}) => {
        _id:uuidv4(),
         type:type,
        amount:amount,
-       date:new Date().toLocaleDateString(),
+       date:new Date().toDateString(),
        category:category,
        uid:auth?.currentUser?.uid,
        tid:tid
       });
       const value=Number(amount);
-      console.log(typeof value);
-      type==="Income"?dispatch(setIncome(value)):dispatch(setExpense(value))
-      dispatch(setSavings(incomeData-expenseData));
-      getData("1D");
+      type==="Income"?dispatch(setIncome(incomeData+value))&&dispatch(setSavings(incomeData+value)):dispatch(setExpense(value));
+       await getData("1D");
       close();
     }catch(err)
     {
       console.log(err);
     }
  }
- console.log(backDate);
-  const getData=async(timespan:string)=>
-{  
-  if(timespan==="1D")
-  {
-      let info:TableData[]=[];
-      console.log(new Date().toLocaleDateString().split('/')[0]);
-       let qDef= query(collectionRef,where("uid","==",authuid),where("date","==",new Date().toLocaleDateString()));
-       let snapdata=await getDocs(qDef);
-       snapdata.forEach((doc:any)=>
-       {
-         info.push({...doc.data()})
-         console.log(info);
-        }
-       ) 
-       dispatch(setTableData(info));
-       return info;
-      }
-  if(timespan==="1M")
+ const getSavings=()=>
+ {
+  if(expenseData>=incomeData)  
+  {  
+    dispatch(setSavings(incomeData-expenseData)); 
+  } 
+   if(incomeData>expenseData)
+    dispatch(setSavings(incomeData-expenseData));
+ }
+ const handleDelete=async(_id:string)=>{
+  const docRef =await query(collectionRef,where("_id","==",_id));
+  const docSnap=await getDocs(docRef);
+ await docSnap.forEach((doc)=>
   { 
-    let today = new Date();
+    if(doc.data().type==="Expense")
+    {
+        dispatch(setExpense(expenseData-parseInt(doc.data().amount)));
+        deleteDoc(doc.ref);
+        dispatch(setSavings(incomeData-expenseData));
+    }
+    if(doc.data().type==="Income")
+    {
+      dispatch(setIncome(incomeData-parseInt(doc.data().amount)));
+      deleteDoc(doc.ref);
+    }
+    console.log("deleted doc with id:",_id);
+  });
+  await getData("1D");
+  console.log("expense got Called Here also at 95");
+}
+ const getData=async(timeVal:string)=>
+{  
+  if(timeVal==="1D")
+  {
+       let info:TableData[]=[];
+       let qDef=query(collectionRef,where("uid","==",authuid),where("date","==",new Date().toDateString()));
+       let snapdata=await getDocs(qDef);
+       await snapdata.forEach((doc:any)=>
+       {
+         info.push({...doc.data()});
+        }); 
+        dispatch(setTableData(info));
+      return info;
+      }
+ if(timeVal==="1M")
+  { 
     let mainData:TableData[]=[];
-    let priorDate = new Date(new Date().setDate(today.getDate() - 30)); 
-    console.log(priorDate.toLocaleDateString().split("T")[0]);
-    let qData = query(collectionRef,where("uid","==",authuid),where("date",">=",priorDate.toLocaleDateString().split("/")[0]));
+    let priorDate = new Date(new Date().setDate(new Date().getDate()-30)).toDateString();
+    let qData = query(collectionRef,where("uid","==",authuid),where("date",">=",priorDate.split(" ")[2]));
     let querData=await getDocs(qData);
-    querData.forEach((doc:any)=>
+    await querData.forEach((doc:any)=>
     {
       mainData.push({...doc.data()});
-      console.log(doc.data());
-    })
-  dispatch(setTableData(mainData));
-  return mainData;
+    });
+    dispatch(setTableData(mainData));
+    return mainData;
 } 
-if(timespan==='1Y')
+if(timeVal==='1Y')
 {
   let prevValues:TableData[]=[];
-  let prevYear=new Date(new Date().setFullYear(new Date().getFullYear()-1));
-  console.log(prevYear.toLocaleDateString());
-  let qStatement=await query(collectionRef,where("uid","==",authuid),where("date",">=",prevYear.toLocaleDateString()));
+  let prevYear=new Date(new Date().setFullYear(new Date().getFullYear()-1)).toDateString();
+  let qStatement=await query(collectionRef,where("uid","==",authuid),where("date",">=",prevYear.split(" ")[3]));
   let queData=await getDocs(qStatement);
-  queData.forEach((doc:any)=>
+  await queData.forEach((doc:any)=>
   {
-    prevValues.push(doc.data());
+    prevValues.push({...doc.data()});
   })
   dispatch(setTableData(prevValues));
   return prevValues;
 }
 }
-console.log(new Date().toLocaleDateString());
 const handleChange=async(e:any)=>
 {
-  setBackDate(e);
-  console.log(e);
+const data:any=await getData(e);
+dispatch(setTableData(data));
 }
-const getTotalIncome=async(authuid:string)=>
+const getTotalIncome=async()=>
 {
-  let incomeOrExpense:number=0;
-  console.log(new Date().setDate(1));
+  let data:number=0;
   const qData=await query(collectionRef,where("uid","==",authuid),where("type",'==',"Income")); 
   const inqueryData=await getDocs(qData);
-  inqueryData.forEach((doc:any) => {
-    incomeOrExpense+=parseInt(doc.data().amount)
+  await inqueryData.forEach((doc:any) => {
+   data+=parseInt(doc.data().amount);
 });
-console.log(incomeOrExpense);
-dispatch(setIncome(incomeOrExpense));
+console.log(data);
+dispatch(setIncome(data));
+console.log(incomeData);
 };
-const getSavings=()=>
-{ 
-  let saving=incomeData-expenseData;
-  dispatch(setSavings(saving));
-  console.log(incomeData-expenseData);
-}
 const getTotalExpenses=async()=>
 {
-  let expenseval=0;
-  const qData=await query(collectionRef,where("uid","==",authuid),where("type",'==',"Expense")); 
+  let qData=await query(collectionRef,where("uid","==",authuid),where("type","==","Expense")); 
   const inqueryData=await getDocs(qData);
   inqueryData.forEach((doc:any) => {
-    expenseval+=parseInt(doc.data().amount)
+  console.log(doc.data());
+  dispatch(setExpense(parseInt(doc.data().amount)));
 });
-dispatch(setExpense(expenseval));
 }
 useEffect(()=>
 {
-  (async function()
-  {
-    console.log(authuid);
-    const elem:any=await getData("1D");
-    setTableData(elem);
-    console.log(elem);
-    dispatch(setTableData(elem));
-    getTotalIncome(authuid);
-    getTotalExpenses();
-    getSavings();
-  })()
+  const callrightNow=async()=>
+  { 
+    await getTotalExpenses();
+    await getData("1D");
+    await getTotalIncome();
+    console.log(incomeData,expenseData);
+     getSavings();
+    };
+authuid && callrightNow();
 },[authuid]);
   return (
     <div className={style["tableWrapper"]}>
@@ -166,14 +174,14 @@ useEffect(()=>
        <Button leftSection={<img src={addImage} alt='Not Found' width={"10px"} height={"10px"}/>} onClick={open} variant="default">
         Add
       </Button>
-      <SegmentedControl color="blue" data={['1D', '1M', '1Y']} onChange={handleChange} />
+      <SegmentedControl color="magenta" data={['1D', '1M', '1Y']} onChange={handleChange} />
       </div>
       </div>
       <Table.ScrollContainer minWidth={500}>
       <Table className={style['tableMain']} stickyHeader withRowBorders={true} stickyHeaderOffset={0}>
       <Table.Thead>
-        <Table.Tr >
-          <Table.Th style={{fontWeight:'600'}} >Transaction ID</Table.Th>
+        <Table.Tr>
+          <Table.Th>Transaction ID</Table.Th>
           <Table.Th>Category name</Table.Th>
           <Table.Th>Date</Table.Th>
           <Table.Th>Type</Table.Th>
@@ -182,7 +190,7 @@ useEffect(()=>
         </Table.Tr>
       </Table.Thead>
     <Table.Tbody>
-    {tableVal?.map((element:any) => (
+    {tableVal?.map((element:any)=> (
     <Table.Tr key={element.name}>
       <Table.Td>#{element.tid.slice(0,6)}</Table.Td>
       <Table.Td>{element.category}</Table.Td>
@@ -192,8 +200,9 @@ useEffect(()=>
       <Table.Td>
       <Button rightSection={<img src={delImage} width="15px" height={"15px"} alt="not_found"/>} 
       variant="default" 
-      value={element.tid} 
-      onClick={(e)=>{handleDelete(e.currentTarget.value); getData("1D"); }}
+      value={element._id} 
+      onClick={(e)=>{handleDelete(e.currentTarget.value);  
+      }}
       >
       Delete
       </Button>
@@ -218,7 +227,7 @@ useEffect(()=>
     style={styles}
     centered
     >
-    <Tabs defaultValue="Expense" onChange={()=>{setCategory(null);}}>
+    <Tabs defaultValue="Expense" onChange={()=>{setCategory("");}}>
       <Tabs.List>
         <Tabs.Tab value="Income">
           Income
@@ -235,7 +244,7 @@ useEffect(()=>
      placeholder="Select expense type"
      data={expenseCategories}
      value={category}
-     onChange={(e)=>setCategory(e)}
+     onChange={(e:any)=>{setCategory(e);}}
      />   
       <NumberInput
       withAsterisk
@@ -258,7 +267,7 @@ useEffect(()=>
        data={incomeCategories}
        name="incomeType"
        value={category}
-       onChange={(e)=>setCategory(e)}
+       onChange={(e:any)=>setCategory(e)}
        />
       <NumberInput
       withAsterisk

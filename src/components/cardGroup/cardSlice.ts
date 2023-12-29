@@ -1,8 +1,9 @@
 import { createSlice,PayloadAction } from "@reduxjs/toolkit";
-interface cardState{
-    income:number,
-    expenses:number,
-    savings:number,
+interface cardState
+{
+    income:number;
+    expenses:number;
+    savings:number;
 }
 const cardInitialState:cardState=
 { 
@@ -17,11 +18,11 @@ export const cardSlice=createSlice({
     {
         setSavings:(state,action:PayloadAction<number>)=>
         {
-          state.savings+=action.payload;
+          state.savings=action.payload;
         },
         setIncome:(state,action:PayloadAction<number>)=>
         {
-            state.income+=action.payload;
+            state.income=action.payload;
         },
         setExpense(state,action:PayloadAction<number>)
         {
@@ -35,5 +36,5 @@ export const cardSlice=createSlice({
        } 
     }
 })
-export const {setSavings,setIncome,setExpense}=cardSlice.actions;
+export const {setSavings,setIncome,setExpense,clearData}=cardSlice.actions;
 export const cardReducer=cardSlice.reducer;

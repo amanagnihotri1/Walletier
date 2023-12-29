@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 const theme = createTheme({
-  fontFamily: 'Poppins, sans-serif',
+  fontFamily: 'Inter, sans-serif',
   breakpoints: {
     xs: '30em',
     sm: '48em',
@@ -21,10 +21,8 @@ const theme = createTheme({
 });
 
 root.render(
-  <React.StrictMode>
    <MantineProvider defaultColorScheme='light' theme={theme}>
    <Notifications/>
     <App />
     </MantineProvider> 
-  </React.StrictMode>
 );

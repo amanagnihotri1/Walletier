@@ -1,30 +1,24 @@
 import React,{useState} from 'react';
 import '@mantine/core/styles.css';
 import '@mantine/core/styles/LoadingOverlay.css';
-import { TextInput,Button,Divider,PasswordInput,Loader,FileInput,LoadingOverlay} from '@mantine/core';
-import { createUserWithEmailAndPassword, getAuth,GoogleAuthProvider, signInWithPopup, updateProfile} from 'firebase/auth';
+import { TextInput,Button,Divider,PasswordInput,LoadingOverlay} from '@mantine/core';
+import { createUserWithEmailAndPassword, getAuth,GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
 import '@mantine/core/styles/global.css';
 import '@mantine/core/styles/UnstyledButton.css';
 import '@mantine/core/styles/Button.css'
 import '@mantine/core/styles/Overlay.css';
 import style from '../Signup/Signup.module.scss';
-import {doc,collection} from "firebase/firestore";
-import { Database } from 'firebase/database';
-import { getDatabase } from 'firebase/database';
 import {ReactComponent as Googleicon} from "../../assets/googleicon.svg";
-import { useDisclosure } from '@mantine/hooks';
 import '@mantine/core/styles/PasswordInput.css';
 import '@mantine/core/styles/Divider.css'
 import '@mantine/core/styles/Input.css';
 import logo from "../../assets/happy.gif";
 import {auth} from "../../Auth/firebaseAuth";
 import brandLogo from "../../assets/wallet.png";
-import { useLocation, useNavigate,Link} from 'react-router-dom';
-import {UserData} from "../../app/TypeInterfaces";
-import {addDoc} from "firebase/firestore";
+import { useNavigate,Link} from 'react-router-dom';
 import { notifications } from '@mantine/notifications';
-import {useSelector,useDispatch} from "react-redux";
-import { setAuthDetails,clearAuthDetails } from '../../Auth/authSlice';
+import {useDispatch} from "react-redux";
+import { setAuthDetails } from '../../Auth/authSlice';
 export const Signup = () => { 
   const[userData,setUser]=useState({
   fullName:'',
@@ -32,15 +26,11 @@ export const Signup = () => {
   password:'',  
   });
   const[isLoading,setLoading]=useState<boolean>(false);
-  const location=useLocation();
   const navigate=useNavigate();
   const dispatch=useDispatch();
-  const [opened,setOpened] = useState(false);
-  const store=useSelector((state:any)=>state.userinfo);
 const handleClick=async(e:any)=>
 { 
   setLoading(true);
-  const db=getDatabase();
   try
   {
     const auth=getAuth();
@@ -57,8 +47,7 @@ const handleClick=async(e:any)=>
     }); 
     user && navigate("/");
     setLoading(!isLoading);
-  }
-  catch(err:any)
+  }catch(err:any)
   {
     notifications.show({
       title: 'Error detected',
@@ -68,19 +57,26 @@ const handleClick=async(e:any)=>
     setLoading(false);
   }
 }  
-let googleProvider=new GoogleAuthProvider();
 const handleLogin=async()=>
 {
-  signInWithPopup(auth,googleProvider).then((response)=>
+  try
   {
-    console.log(response.user);
-  }).catch((err)=>
+    let googleProvider=new GoogleAuthProvider();
+    const response=await signInWithPopup(auth,googleProvider);
+    dispatch(setAuthDetails({useremail:response?.user?.email,fullName:response?.user?.displayName,uid:response?.user?.uid,profileImage:response?.user?.photoURL}))
+    navigate("/");
+    notifications.show({
+    title:"Success",
+    message:"Logged in successfully.",  
+  })
+  console.log(response);
+  }catch(err:any)
   {
     notifications.show({
     title: 'Error,Cannot process request at the moment',
     message: err.message,
-  }); 
-  })
+  });
+}
 }
   return (
     <div className={style['formWrapper']}>
@@ -100,7 +96,6 @@ const handleLogin=async()=>
      <div className={style['leftSide']}>
      <div className={style['titleMain']}>Welcome,</div>
      <TextInput
-      label=" Full Name"
       type='text'
       withAsterisk
       placeholder="Enter full name"
@@ -110,7 +105,7 @@ const handleLogin=async()=>
       name="fullName"
     />
      <TextInput
-      label="Email ID"
+
       withAsterisk
       placeholder="Enter email ID"
       error={userData.email==="" && "Enter email ID"}
@@ -119,7 +114,7 @@ const handleLogin=async()=>
       onChange={(e)=>setUser({...userData,[e.target.name]:e.target.value})}
       />
      <PasswordInput     
-      label="Password"
+
       withAsterisk
       placeholder="Create password"
       name='password'
@@ -147,7 +142,7 @@ const handleLogin=async()=>
       className={style["buttonStyle"]}
       leftSection={<Googleicon />}
       type='button'
-      onClick={handleClick}
+      onClick={handleLogin}
       >
       Login
       </Button>

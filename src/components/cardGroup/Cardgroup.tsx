@@ -1,28 +1,19 @@
-import React from 'react';
 import style from "../cardGroup/cardgroup.module.scss";
 import '@mantine/core/styles/Badge.css';
-import { LineChart, Line, Tooltip,ResponsiveContainer,PieChart,Pie } from 'recharts';
+import CountUp from 'react-countup';
+import { LineChart, Line, Tooltip,ResponsiveContainer } from 'recharts';
 import coinImage from "../../assets/coin.png";
-import { useData } from '../../customHook/useData';
-import { RingProgress,ColorSwatch,Text,Badge } from '@mantine/core';
-import {getColor } from '../../utils/data';
+import {ReactComponent as ExpenseImage} from "../../assets/expense_svg.svg"; 
+import { RingProgress,Text,Badge } from '@mantine/core';
 import savingBag from "../../assets/savings1.png";
-import { expenseCategories} from '../../utils/data';
-import {ReactComponent as ExpandImg} from "../../assets/expand.svg";
 import { useSelector } from 'react-redux';
+import { Expensegraph } from '../ExpenseGraph/Expensegraph';
 export const Cardgroup = () => {
+  const savingValue=useSelector((state:any)=>state.cardSlice.savings);
   const expenseValue=useSelector((state:any)=>state.cardSlice.expenses);
   const incomeValue=useSelector((state:any)=>state.cardSlice.income);
-  const expenseData1=useData();
-// const getGraphData=async()=>
-// {
-//   let qDef= await query(collectionRef,where("uid","==",authuid));
-//   let snapdata=await getDocs(qDef);
-//   snapdata.forEach((doc:any)=>
-//     graphArray?.push(doc.data())
-//   )  
-// }
-const data =[
+  console.log(savingValue);
+    const data =[
         {
           name: 'Grocery',
           uv: 2220,
@@ -58,15 +49,13 @@ const data =[
     <div className={style["cardWrapper"]}>
     <div className={style['incomeTile']}>
     <div className={style['expandimg']}>
-      <ExpandImg width={"100%"} height={"100%"} fill="#000"/>
     </div>
     <div className={style['tileIcon']}><img src={coinImage} alt="not_found" />
     </div>  
      <div className={style['saveinfo']}>
      <div>Total Income</div>
-     <Badge color="blue">Monthly</Badge>
      </div> 
-     <div style={{fontWeight:'600',fontSize:'24px'}}>$ {incomeValue}</div>
+     <div style={{fontWeight:'600',fontSize:'24px'}}>$ <CountUp end={incomeValue}/></div>
      <ResponsiveContainer width="100%" height="40%">
         <LineChart width={250} height={60} data={data}>
           <Line type="monotone" dataKey="amount" stroke="#4361ee" strokeWidth={3} />
@@ -75,10 +64,10 @@ const data =[
       </ResponsiveContainer>
     </div>
     <div className={style['incomeTile']}>
-    <div className={style['tileIcon']}><img src={coinImage} alt="" />
+    <div className={style['tileIcon']}><ExpenseImage  />
     </div>   
      <div>Total Expenses</div>
-     <div style={{fontWeight:'600',fontSize:'24px'}}>$ {expenseValue}</div>
+     <div style={{fontWeight:'600',fontSize:'24px'}}>$ <CountUp end={expenseValue}/></div>
      <ResponsiveContainer width="100%" height="40%" className={style["graphwrap"]}>
         <LineChart width={250} height={60} data={data}>
           <Line type="monotone" dataKey="amount" stroke="#fb8b24" strokeWidth={3} />
@@ -90,15 +79,15 @@ const data =[
     <div className={style['tileIcon']}><img src={savingBag} alt="not_found" />
     </div>   
      <div className={style['saveinfo']}>
-     <div>Saving Goal</div>
-     <Badge color="blue">Monthly</Badge>
+     <div>Saving</div>
+     <Badge color="magenta">Till now</Badge>
      </div>
      <div style={{
-     fontWeight:'600',
+       fontWeight:'600',
      fontSize:'24px',
      display:'flex'
      }}>
-      $ {incomeValue-expenseValue}
+      $ <CountUp end={incomeValue-expenseValue}/>
       </div>
      <RingProgress
      style={{
@@ -114,23 +103,11 @@ const data =[
       ]}
     />
     </div>
-  <div className={style['expense-graph']}>
-  <div className={style['textHeading']}>Expense Analysis</div>
-  <div className={style['saveinfomin']}>  
-  <PieChart width={130} height={150}>
-  <Pie data={expenseData1} dataKey="value" nameKey="name" fill="#fff" cx="50%" cy="60%" outerRadius={50} />
-  <Tooltip/>
-  </PieChart>
-      <div className={style['catelist']}>
-    <ul style={{listStyle:'none',margin:'0'}}>
-    { 
-    expenseCategories.map((item)=>
-    (
-    <li style={{display:'inline-flex',margin:'2px 8px',gap:'5px'}}><ColorSwatch color={getColor(item)} size={"20px"} />{item}</li>
-    ))}  
-    </ul>
-    </div>
-    </div>
+    <div className={`${style.incomeTile} ${style.savingTile} ${style.analysisTile}`}> 
+      <i className='bx bx-credit-card-front bx-sm cardIcon'></i> 
+     <div className={style['analysisText']}>
+     Expense Analysis</div>
+      <Expensegraph/>
     </div>
     </div>
   )
