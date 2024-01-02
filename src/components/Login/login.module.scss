@@ -1,0 +1,80 @@
+.loginbackground
+{
+    width: 100vw;
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-image: url("../../assets/circlemain.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: 10;
+.loginWrapper
+{
+    width: auto;
+    position: relative;
+    height: auto;
+    padding: 10px 50px;
+    background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(234,249,249,0.67) 0.1%, rgba(239,249,251,0.63) 90.1% );
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    box-shadow: 0px 1px 1px rgba(3, 7, 18, 0.01),
+0px 5px 2px rgba(3, 7, 18, 0.01),
+0px 12px 5px rgba(3, 7, 18, 0.01),
+0px 20px 10px rgba(3, 7, 18, 0.01),
+0px 32px 15px rgba(3, 7, 18, 0.01);
+
+.brandCover
+ {
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+  align-items: center;
+  justify-content: center;   
+img
+{
+    width: 100%;
+    height: 100%;
+}
+} 
+.leftForm
+{
+    height: 100%;
+    width: 30vw;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-top:10px;
+    gap: 10px;
+
+    :global(.mantine-InputWrapper-label)
+    {
+     color: rgb(53, 53, 53);
+    } 
+ .logButton
+ {
+    background-color: #FFF;
+    color: violet;
+ } 
+}
+.rightSVG
+{
+    width: 40%;
+    height: 100%;
+    object-fit: cover;
+img
+{
+    width: 100%;
+    height: auto;
+}
+}
+}
+
+}
