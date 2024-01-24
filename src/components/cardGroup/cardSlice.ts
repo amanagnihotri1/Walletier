@@ -26,7 +26,7 @@ export const cardSlice=createSlice({
         },
         setExpense(state,action:PayloadAction<number>)
         {
-            state.expenses+=action.payload;
+            state.expenses=action.payload;
         },
        clearData(state)
        {

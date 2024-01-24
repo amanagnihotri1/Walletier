@@ -47,7 +47,7 @@ const HandleLogout=async()=>
     </div>
     <h3>{userName}</h3>
     </div>
-    <Button variant="filled" color={"#ffffff"} onClick={HandleLogout}>Logout</Button>
+    <Button variant="filled" color={"#ffffff"} style={{width:'100%'}} onClick={HandleLogout}>Logout</Button>
     </div>
      </div> 
   )

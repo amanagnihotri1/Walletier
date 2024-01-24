@@ -6,6 +6,7 @@ interface authDetails
   profileImage?:string | null;
   error?:string;
   uid?:string;
+  monthlyGoal?:number;
 };
 export const initialState:authDetails=
 {

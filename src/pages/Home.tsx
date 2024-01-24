@@ -6,6 +6,7 @@ import '@mantine/carousel/styles.css';
 import style from "../pages/home.module.scss";
 import '@mantine/core/styles/Text.css';
 import { Navbar } from '../components/Navbar/Navbar';
+import { MonthlyGoal } from '../components/MonthlyGoal/MonthlyGoal';
 import { useSelector,useDispatch } from 'react-redux';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getAuth } from 'firebase/auth';
@@ -41,11 +42,12 @@ const dispatch=useDispatch();
         fontSize:'12px',
       }}
      >Now handle your expenses at ease</p>  
+    <MonthlyGoal/>
     </div>
     <div className={style['subWrapper']}>
     <div className={style['leftWrap']}>
     <Cardgroup />
-     </div>
+    </div> 
      <div className={style['rightWrap']}>
      <Transactions/> 
     </div>

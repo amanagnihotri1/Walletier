@@ -18,7 +18,8 @@ import { useDisclosure } from '@mantine/hooks';
 import formatDate from '../../utils/formatDate';
 import {setTableData } from './transactionSlice';
 import {setExpense, setIncome, setSavings } from '../cardGroup/cardSlice';
-import {Table,Button,SegmentedControl,Modal,Select,Tabs, NumberInput,Transition} from '@mantine/core';
+import {Table,Button,SegmentedControl,Modal,Select,Tabs, NumberInput,Transition, Notification} from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 export const collectionRef=collection(database,"Bill_list");
 export const Transactions = () => {
   const dispatch=useDispatch();
@@ -35,7 +36,13 @@ export const Transactions = () => {
   const handleSubmit=async(e:any)=>
  { 
    try
-   {
+   {   
+       
+    if(!amount && !category)
+    {
+      notifications.show({title:"Error",message:"Missing Field!!"});
+    return new Error(`Error filed missing`);
+    } 
        e.preventDefault();
        await addDoc(collectionRef,{
        _id:uuidv4(),
@@ -47,12 +54,12 @@ export const Transactions = () => {
        tid:tid
       });
       const value=Number(amount);
-      type==="Income"?dispatch(setIncome(incomeData+value))&&dispatch(setSavings(incomeData+value)):dispatch(setExpense(value));
+      type==="Income"?dispatch(setIncome(incomeData+value))&&dispatch(setSavings(incomeData+value)):dispatch(setExpense(expenseData+value));
        await getData("1D");
       close();
-    }catch(err)
+    }catch(err:any)
     {
-      console.log(err);
+      notifications.show({title:"Error",message:err.message});
     }
  }
  const getSavings=()=>
@@ -67,8 +74,11 @@ export const Transactions = () => {
  const handleDelete=async(_id:string)=>{
   const docRef =await query(collectionRef,where("_id","==",_id));
   const docSnap=await getDocs(docRef);
- await docSnap.forEach((doc)=>
+  var deleteDocDate="";
+ await docSnap.forEach((doc:any)=>
   { 
+    deleteDocDate=doc.data().date;
+    console.log(deleteDocDate);
     if(doc.data().type==="Expense")
     {
         dispatch(setExpense(expenseData-parseInt(doc.data().amount)));
@@ -80,10 +90,13 @@ export const Transactions = () => {
       dispatch(setIncome(incomeData-parseInt(doc.data().amount)));
       deleteDoc(doc.ref);
     }
-    console.log("deleted doc with id:",_id);
   });
-  await getData("1D");
-  console.log("expense got Called Here also at 95");
+   if(deleteDocDate===new Date().toDateString())
+   {
+     await getData("1D");
+   }
+   else
+   await getData("1M");
 }
  const getData=async(timeVal:string)=>
 {  
@@ -145,12 +158,13 @@ console.log(incomeData);
 };
 const getTotalExpenses=async()=>
 {
+  let data:number=0;
   let qData=await query(collectionRef,where("uid","==",authuid),where("type","==","Expense")); 
   const inqueryData=await getDocs(qData);
   inqueryData.forEach((doc:any) => {
-  console.log(doc.data());
-  dispatch(setExpense(parseInt(doc.data().amount)));
-});
+    data+=parseInt(doc.data().amount);  
+  });
+  dispatch(setExpense(data));
 }
 useEffect(()=>
 {
@@ -159,8 +173,7 @@ useEffect(()=>
     await getTotalExpenses();
     await getData("1D");
     await getTotalIncome();
-    console.log(incomeData,expenseData);
-     getSavings();
+    getSavings();
     };
 authuid && callrightNow();
 },[authuid]);

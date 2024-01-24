@@ -1,20 +1,35 @@
 .cardWrapper
 {
-    width: 90%;
+    flex-grow: 1/2;
     height: auto;
     display:flex;
     flex-wrap: wrap;
     border-radius: 8px;
     align-items: center;
-    gap: 10px;
-    justify-content: space-around;
+    gap: 30px;
+    justify-content: center;
     margin: 0px;
 
     .savingTile
-    {
+    { 
         width: 360px;
         height: 250px;
         background: radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%);
+    .piggyBank
+    {
+        display: block;
+        width: 100%;
+        height: 100%;
+        margin-left: 90px;
+        object-fit: cover;
+        padding: 0px auto;
+    img
+    {
+        width: auto;
+        height: 60%;
+
+    }    
+    }
     }
     .analysisTile
     {
@@ -47,7 +62,7 @@
             object-fit: contain;
             right: 0px;
             top: 10px;
-            color: #000;
+            color: #868e96;
             position: absolute;
             width: 30px;
             height: 30px;
@@ -99,7 +114,7 @@ img
   height: auto;
   width: 100%;
   font-weight: bold;
-  color: rgb(0, 0, 0); 
+  color: #868e96;
   width: 50%;
   align-items: left;
 .recharts-default-legend

@@ -37,6 +37,7 @@ const handleClick=async(e:any)=>
     const{email,password,fullName}=userData;
     const userCred=await createUserWithEmailAndPassword(auth,email,password);
     const user=userCred.user;
+    
     console.log(user);
     dispatch(setAuthDetails({useremail:user.email,fullName:fullName}));
     console.log(email,password,fullName);

@@ -1,6 +1,7 @@
 import "@mantine/core/styles/global.css";
 import React from 'react';
 import './App.css';
+import '@mantine/charts/styles.css';
 import { Login } from './components/Login/Login';
 import { Home } from './pages/Home';
 import { store } from './app/store';
