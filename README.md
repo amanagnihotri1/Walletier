@@ -1,4 +1,4 @@
-3. Project: Expense Tracker App:
+###Expense Tracker App:
 Provide a project overview:
 Mention the project's goal: Developing an intuitive expense tracker app for personal finance management.
 Technologies Used: React, Firebase, TypeScript, Mantine library.
