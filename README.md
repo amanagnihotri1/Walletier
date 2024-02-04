@@ -1,4 +1,4 @@
-# Personal Expense Tracker App
+#### Personal Expense Tracker App
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
@@ -15,7 +15,7 @@ This is a personal expense tracker app built using ReactJS, Redux for state mana
 
 ## Installation
 
-1. Clone the repository:
+## 1. Clone the repository:
 git clone https://github.com/amanagnihotri1/Walletier.git
 ## User Authentication:
 Implemented secure user authentication using Firebase Auth.
@@ -29,17 +29,17 @@ Responsive Design:
 Ensured a responsive and user-friendly interface for various devices.
 ## 4. Development Process:
 Describe your approach to the development process:
-## Agile Methodology:
+# Agile Methodology:
 Adopted an Agile development approach for iterative and collaborative progress.
-## Version Control:
+# Version Control:
 Maintained code integrity using Git for version control.
-## Code Reviews:
+# Code Reviews:
 Engaged in regular code reviews to ensure high-quality code and best practices.
 ## 5. Challenges and Solutions:
 Discuss any challenges encountered during the project and how you overcame them:
-## Authentication Challenges:
+# Authentication Challenges:
 Overcame authentication challenges by implementing Firebase Auth and ensuring a secure login process.
-## Optimizing Real-time Updates:
+# Optimizing Real-time Updates:
 Optimized real-time data updates by fine-tuning Firebase Realtime Database queries.
 ## 6. Results and Impact:
 Discuss the impact of the project and any positive outcomes:
