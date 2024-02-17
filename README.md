@@ -3,7 +3,11 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## Demo 
-[![Link](https://skillicons.dev/icons?i=firebase)](https://expensetracker-cd16f.web.app/signup)
+<p align="center">
+  <a href="https://expensetracker-cd16f.web.app/signup">
+    <img src="https://skillicons.dev/icons?i=firebase" />
+  </a>
+</p>
 ## Description
 
 This is a personal expense tracker app built using ReactJS, Redux for state management, and Firestore as the database. It helps users manage and track their expenses efficiently.
