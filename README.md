@@ -12,6 +12,7 @@
     <img src="https://skillicons.dev/icons?i=redux" />
   
 </p>
+
 ## Description
 
 This is a personal expense tracker app built using ReactJS, Redux for state management, and Firestore as the database. It helps users manage and track their expenses efficiently.
