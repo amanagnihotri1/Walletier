@@ -2,6 +2,8 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+## Demo 
+[![Link](https://skillicons.dev/icons?i=firebase)](https://expensetracker-cd16f.web.app/signup)
 ## Description
 
 This is a personal expense tracker app built using ReactJS, Redux for state management, and Firestore as the database. It helps users manage and track their expenses efficiently.
@@ -33,22 +35,16 @@ Describe your approach to the development process:
 Adopted an Agile development approach for iterative and collaborative progress.
 # Version Control:
 Maintained code integrity using Git for version control.
-# Code Reviews:
-Engaged in regular code reviews to ensure high-quality code and best practices.
 ## 5. Challenges and Solutions:
-Discuss any challenges encountered during the project and how you overcame them:
+Learned Firestore database and learned query implementation as required for the project.
 # Authentication Challenges:
 Overcame authentication challenges by implementing Firebase Auth and ensuring a secure login process.
 # Optimizing Real-time Updates:
 Optimized real-time data updates by fine-tuning Firebase Realtime Database queries.
 ## 6. Results and Impact:
-Discuss the impact of the project and any positive outcomes:
-## Positive User Feedback:
-Received positive feedback for the app's user-friendly interface and real-time data updates.
+Seamless and Refined UI experience with detailed and concise information representation in UI.
 ## Increased Efficiency:
-Contributed to improved financial management for users through the app.
-## 7. Education and Certifications:
-Mention relevant educational background and certifications that support your skills in React, Firebase, TypeScript, and Mantine.
+It;s on initial stage but adding user friendly features like using voice regonition to add transaction and adding monthly personal finance tracking are some features planned. 
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
