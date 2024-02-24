@@ -12,7 +12,6 @@ https://expensetracker-cd16f.web.app/signup
     <img src="https://skillicons.dev/icons?i=react" />
     <img src="https://skillicons.dev/icons?i=css" />
     <img src="https://skillicons.dev/icons?i=redux" />
-  
 </p>
 
 ## Description
