@@ -18,9 +18,10 @@ import {setTableData } from './transactionSlice';
 import {setIncome } from '../cardGroup/cardSlice';
 import {Table,Button,SegmentedControl,Modal,Select,Tabs,NumberInput,Transition,ActionIcon} from '@mantine/core';
 import { notifications } from '@mantine/notifications';
+import { TableData } from '../../app/TypeInterfaces';
 export const Transactions = () => {
   const dispatch=useDispatch();
-  const tableVal:[]=useSelector((state:any)=>state.transReducer.expenseList);
+  const tableVal:TableData[]=useSelector((state:any)=>state.transReducer.expenseList);
   const authuid=useSelector((state:any)=>state.authReducer.uid);
   const[type,setType]=useState<string>("");
   const[amount,setAmount]=useState<number>(0);
