@@ -135,7 +135,7 @@ useEffect(()=>
         </Table.Tr>
       </Table.Thead>
     <Table.Tbody>
-    {tableVal?.map((element:any)=> (
+    {tableVal.map((element:any)=> (
     <Table.Tr key={element.name}>
       <Table.Td>#{element._id.slice(0,4)}...</Table.Td>
       <Table.Td>{element.category}</Table.Td>
