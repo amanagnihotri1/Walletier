@@ -14,7 +14,7 @@ const[entertainment,setEntertainment]=useState<number>();
 const authuid=useSelector((state:any)=>state.authReducer.uid) || localStorage.getItem("uid");
 const getExpenseData=async()=>
 {    
-    const res:any=await axios.get(`/getGraphData?uid=${authuid}`);
+    let res:any=await axios.get(`/getGraphData?uid=${localStorage.getItem('uid')}`);
     console.log(res);
     setExpenseData(res?.data);
     return res.data;

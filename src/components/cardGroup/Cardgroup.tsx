@@ -13,11 +13,9 @@ import { Sparkline } from '@mantine/charts';
 import { Expensegraph } from '../ExpenseGraph/Expensegraph';
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setIncome,setExpense,setSavings,setExpenseGraph} from "./cardSlice";
+import { setIncome,setExpense} from "./cardSlice";
 const Cardgroup = () => {
   const dispatch=useDispatch();
-  const expenseGraph=useSelector((state:any)=>state.cardSlice.expenseGraph);
-  const incomeGraph=useSelector((state:any)=>state.cardSlice.incomeGraph);
   const expenseValue=useSelector((state:any)=>state.cardSlice.expenses);
   const incomeValue=useSelector((state:any)=>state.cardSlice.income);
   const getData=async()=>
@@ -35,6 +33,7 @@ const Cardgroup = () => {
      await getData();
     }
     call();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
   return (
     <div className={style["cardWrapper"]}>

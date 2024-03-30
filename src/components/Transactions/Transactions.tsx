@@ -118,7 +118,7 @@ useEffect(()=>
        <Button leftSection={<img src={addImage} alt='Not Found' width={"10px"} height={"10px"}/>} onClick={open} variant="default">
         Add
       </Button>
-      <SegmentedControl color="magenta" data={['1D', '1M', '1Y']} defaultValue={"1D"} onChange={handleChange} />
+      <SegmentedControl color="magenta" data={['1D', '1M', '1Y']} onChange={handleChange} />
       </div>
       </div>
       <Table.ScrollContainer minWidth={500}>
@@ -135,7 +135,7 @@ useEffect(()=>
       </Table.Thead>
     <Table.Tbody>
     {tableVal?.map((element:any)=> (
-    <Table.Tr key={element.name}>
+    <Table.Tr key={element.id}>
       <Table.Td>#{element._id.slice(0,4)}...</Table.Td>
       <Table.Td>{element.category}</Table.Td>
       <Table.Td>{format(element.date,'dd-MM-yyyy')}</Table.Td>
