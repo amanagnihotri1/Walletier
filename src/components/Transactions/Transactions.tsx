@@ -73,7 +73,7 @@ export const Transactions = () => {
 {  
  if(timeVal==="1D")
  {
-  let queryData:any=await axios.get(`/currdayentries?userid=${localStorage.getItem('uid')}`);
+  let queryData=await axios.get(`/currdayentries?userid=${localStorage.getItem('uid')}`);
   dispatch(setTableData(queryData?.data));
   return queryData.data;
  } 
