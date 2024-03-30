@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import '@mantine/dates/styles.css';
 import '@mantine/core/styles/Button.css';
 import '@mantine/core/styles/Modal.css';
@@ -107,7 +108,6 @@ useEffect(()=>
    dispatch(setTableData(result));
   };
  call();
-// eslint-disable-next-line react-hooks/exhaustive-deps
 },[]);
   return (
     <div className={style["tableWrapper"]}>
