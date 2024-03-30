@@ -1,3 +1,64 @@
+<<<<<<< HEAD
+=======
+### Personal Expense Tracker App
+
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+## Demo Link
+https://expensetracker-cd16f.web.app/signup
+## Tech Stack
+<p align="center">
+  <a href="https://expensetracker-cd16f.web.app/signup">
+    <img src="https://skillicons.dev/icons?i=firebase" />
+  </a>
+    <img src="https://skillicons.dev/icons?i=react" />
+    <img src="https://skillicons.dev/icons?i=css" />
+    <img src="https://skillicons.dev/icons?i=redux" />
+</p>
+
+## Description
+
+This is a personal expense tracker app built using ReactJS, Redux for state management, and Firestore as the database. It helps users manage and track their expenses efficiently.
+
+## Features
+
+- **User Authentication**: Allow users to sign up and log in securely.
+- **Expense Tracking**: Log and categorize your expenses for better financial management.
+- **Redux State Management**: Utilize Redux for efficient state management.
+- **Firestore Database**: Store and retrieve expense data in Firestore, a NoSQL database.
+
+## Installation
+
+## 1. Clone the repository:
+git clone https://github.com/amanagnihotri1/Walletier.git
+## User Authentication:
+Implemented secure user authentication using Firebase Auth.
+## Real-time Data:
+Utilized Firebase Realtime Database for seamless and instant data updates.
+Type-Safe Development:
+Implemented TypeScript for enhanced code quality and maintainability.
+## UI Components:
+Utilized Mantine library for consistent and aesthetically pleasing UI components.
+Responsive Design:
+Ensured a responsive and user-friendly interface for various devices.
+## 4. Development Process:
+Describe your approach to the development process:
+# Agile Methodology:
+Adopted an Agile development approach for iterative and collaborative progress.
+# Version Control:
+Maintained code integrity using Git for version control.
+## 5. Challenges and Solutions:
+Learned Firestore database and learned query implementation as required for the project.
+# Authentication Challenges:
+Overcame authentication challenges by implementing Firebase Auth and ensuring a secure login process.
+# Optimizing Real-time Updates:
+Optimized real-time data updates by fine-tuning Firebase Realtime Database queries.
+## 6. Results and Impact:
+Seamless and Refined UI experience with detailed and concise information representation in UI.
+## Increased Efficiency:
+It;s on initial stage but adding user friendly features like using voice regonition to add transaction and adding monthly personal finance tracking are some features planned. 
+# Getting Started with Create React App
+>>>>>>> aad7892a684fb098d0dba0c8684b9a94b378510a
 
 # Walletier
 
