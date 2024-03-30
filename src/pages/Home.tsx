@@ -1,18 +1,19 @@
-import React,{ useEffect } from 'react';
+import React,{ useEffect,useState} from 'react';
 import '@mantine/core/styles/global.css';
 import '@mantine/core/styles/Button.css';
 import '@mantine/core/styles/UnstyledButton.css';
 import '@mantine/carousel/styles.css';
 import style from "../pages/home.module.scss";
+import '@mantine/dates/styles.css';
 import '@mantine/core/styles/Text.css';
 import { Navbar } from '../components/Navbar/Navbar';
-import { MonthlyGoal } from '../components/MonthlyGoal/MonthlyGoal';
+import MonthlyGoal from '../components/MonthlyGoal/MonthlyGoal';
 import { useSelector,useDispatch } from 'react-redux';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getAuth } from 'firebase/auth';
 import { clearAuthDetails, setAuthDetails} from '../Auth/authSlice';
 import { Transactions } from '../components/Transactions/Transactions';
-import { Cardgroup } from '../components/cardGroup/Cardgroup';
+import Cardgroup  from '../components/cardGroup/Cardgroup';
 export const Home = () => {
 const dispatch=useDispatch();
  useEffect(()=>
@@ -27,22 +28,12 @@ const dispatch=useDispatch();
   });
  },[]);
   const userfullName=useSelector((state:any)=>state.authReducer.fullName);
+  const authid:any=useSelector((state:any)=>state.authReducer.authuid);
   return (
     <div className={style["mainWrapper"]}>
     <Navbar />
     <div className={style['mainText']}>
-    <p style={{display:'inline-block',fontWeight:'500',fontSize:'1.2rem',margin:'0'}}>
-    Welcome,
-    </p>
-    {userfullName}
-     <p
-      style={{
-        margin:'0px',
-        fontWeight:'400',
-        fontSize:'12px',
-      }}
-     >Now handle your expenses at ease</p>  
-    <MonthlyGoal/>
+    <MonthlyGoal uid={authid || localStorage.getItem("uid")}/>
     </div>
     <div className={style['subWrapper']}>
     <div className={style['leftWrap']}>
@@ -52,6 +43,7 @@ const dispatch=useDispatch();
      <Transactions/> 
     </div>
     </div>
+    <div className={style['bottomText']}>Made With ❣ by Aman Agnihotri</div>
     </div>
   )
 }

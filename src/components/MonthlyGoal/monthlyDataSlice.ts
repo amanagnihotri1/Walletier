@@ -1,32 +1,38 @@
 import { createSlice,PayloadAction } from "@reduxjs/toolkit";
 interface monthlyData
 {
-    incomeGoal:number;
-    savingGoal:number;
-    expenseGoal:number;
+    income:number;
+    expense:number;
+    moneySaved:number;
+    prevMonthSavingComp:number;
+    prevMonthIncomeComp:number;
+    prevMonthExpenseComp:number;
 }
 const monthlyDataState:monthlyData=
 {
-    incomeGoal:0,
-    expenseGoal:0,
-    savingGoal:0
+    income:0,
+    expense:0,
+    moneySaved:0,
+    prevMonthSavingComp:0,
+    prevMonthIncomeComp:0,
+    prevMonthExpenseComp:0
 }
 const monthlySlice=createSlice({
 name:'MonthlyCardInfo',
 initialState:monthlyDataState,
 reducers:
 {
-    setMonthlyexpenseData(state,action:PayloadAction<number>)
+    setMonthlyData(state,action:PayloadAction<{expense:number,income:number,savingVal:number,prevMonthSaving:number,prevMonthIncome:number,prevMonthExpense:number}>)
     {
-      state.expenseGoal=action.payload;
+      state.expense=action.payload.expense;
+      state.income=action.payload.income;
+      state.moneySaved=action.payload.savingVal;
+      state.prevMonthExpenseComp=action.payload.prevMonthExpense;
+      state.prevMonthIncomeComp=action.payload.prevMonthIncome;
+      state.prevMonthSavingComp=action.payload.prevMonthSaving;
     },
-    setMonthlyincomeData(state,action:PayloadAction<number>){
-      state.incomeGoal=action.payload;  
-    },
-    setMonthlysavingData(state,action:PayloadAction<number>){
-      state.savingGoal=action.payload;  
-    },
-
 }
 });
+export const{setMonthlyData}=monthlySlice.actions;
+export const monthlyDataReducer=monthlySlice.reducer;
 

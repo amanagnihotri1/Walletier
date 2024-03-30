@@ -1,9 +1,14 @@
 .root {
-    padding: calc(var(--mantine-spacing-xl) * 1.5);
-  }
+  padding: calc(var(--mantine-spacing-xl) * 1.5);
+}
+:global(.mantine-InputWrapper-root)
+{
+    margin-top: 20px;
+}
   .mantine-SimpleGrid-root
   {
     width: 60%;
+    margin-top: 20px;
   }
   .value {
     font-size: 24px;
@@ -24,4 +29,16 @@
   .title {
     font-weight: 700;
     text-transform: uppercase;
+  }
+  .pickerWrapper
+  {
+    width: 240px;
+    margin-bottom: 20px;
+  }
+  .subHeading
+  {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
   }

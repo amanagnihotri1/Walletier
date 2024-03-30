@@ -145,7 +145,7 @@ img
     margin-left: 20px;
     height: 60% !important;
 }
-:global(recharts-default-legend)
+:global(.recharts-default-legend)
 {
     display: inline;
 }
@@ -169,4 +169,13 @@ img
     font-size: 12px;
     font-weight: 600;
     display: inline;
+}
+:global(.recharts-tooltip-wrapper)
+{
+    top: 60px !important;
+    left: -30px !important;
+}
+:global(.mantine-Badge-root)
+{
+    margin-left: 10px;
 }

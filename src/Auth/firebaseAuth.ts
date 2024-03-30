@@ -1,5 +1,5 @@
 import { initializeApp} from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth,sendPasswordResetEmail,confirmPasswordReset } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 export const firebaseConfig=
 {
@@ -14,3 +14,10 @@ export const firebaseConfig=
 export const app = initializeApp(firebaseConfig);
 export const database = getFirestore(app);
 export const auth=getAuth();
+  export const confirmThePasswordReset = async (
+    oobCode:string, newPassword:string
+  ) => {
+    if(!oobCode && !newPassword) return;
+    
+    return await confirmPasswordReset(auth, oobCode, newPassword)
+  }

@@ -10,7 +10,7 @@ interface authDetails
 };
 export const initialState:authDetails=
 {
-fullName:null,
+fullName:null || localStorage.getItem("user"),
 useremail:'',
 profileImage:null,
 error:'',

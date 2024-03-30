@@ -10,6 +10,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import {Provider} from 'react-redux';
+import { PasswordReset } from "./components/PasswordReset/PasswordReset";
 import { Signup } from './components/Signup/Signup';
 import { GenReports } from "./pages/GenReports";
 function App() 
@@ -18,6 +19,10 @@ function App()
   {
     path:"/login",
     element:<Login/>,
+  },
+  {
+    path:'/resetPassword',
+    element:<PasswordReset />
   },
   {
     path:'/',
@@ -30,7 +35,7 @@ function App()
   {
     path:'/reports',
     element:<GenReports/>
-  }
+  },
   ]);
   return (
     <Provider store={store}>

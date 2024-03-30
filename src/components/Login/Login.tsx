@@ -4,8 +4,9 @@ import React,{useState} from 'react';
 import '@mantine/core/styles/Loader.css';
 import brandLogo from "../../assets/wallet.png";
 import '@mantine/core/styles/LoadingOverlay.css';
-import { getAuth,signInWithEmailAndPassword } from 'firebase/auth';
-import { TextInput,PasswordInput,Button,LoadingOverlay } from '@mantine/core';
+import { auth } from '../../Auth/firebaseAuth';
+import { getAuth,signInWithEmailAndPassword,sendPasswordResetEmail} from 'firebase/auth';
+import { TextInput,PasswordInput,Button,LoadingOverlay,Checkbox,Text} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useDispatch} from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -17,10 +18,25 @@ export const Login= () => {
  const dispatch=useDispatch();
  const[visible,{toggle}]=useDisclosure(false);
  const[isLoading,setLoading]=useState<boolean>(false);
+ const[agreeVal,setAgreeValue]=useState("");
  const[userinfo,setUserInfo]=useState<{email:string; password:string}>({
   email:'',
   password:'',
 });
+ const handlePasswordReset = async (email: string) => {
+  if(!email)
+  {
+    notifications.show({
+    title: 'Error',
+    message: 'Missing field:Email 🤥',
+    autoClose:2000,
+  })
+  }
+  else
+  {
+    return await sendPasswordResetEmail(auth, email);
+  }
+}
 const handleClick=async()=>
 {   
   try
@@ -29,7 +45,9 @@ const handleClick=async()=>
        const{email,password}=userinfo;
        const userCred=await signInWithEmailAndPassword(auth,email,password);
        const usermain = userCred.user;
-       dispatch(setAuthDetails({useremail:usermain?.email,fullName:usermain?.displayName,uid:usermain.uid}));
+       localStorage.setItem("uid",usermain.uid);
+       console.log(usermain);
+       dispatch(setAuthDetails({useremail:usermain?.email,fullName:usermain?.displayName,uid:usermain?.uid}));
        usermain && navigate("/");
        notifications.show({title:"Success",message:"User loggedin successfully"});
       }
@@ -51,12 +69,15 @@ const handleClick=async()=>
       <img src={brandLogo} alt="not_found" width={50} height={50}/>
       </div>
     <div className={style['leftForm']}>
-    <h1 className={style['headingTitle']}>Login</h1>
+    <Text className={style['headingTitle']} fw={700} variant={'gradient'}
+     gradient={{ from: 'violet', to: 'rgba(56, 55, 55, 1)', deg: 147 }}
+    >Login</Text>
     <TextInput
       label="Email ID"
       withAsterisk
       color='#FFF'
       required
+      leftSection={<i className="uil uil-envelope-check"></i>}
       name='email'
       placeholder="Enter Email ID"
       onChange={(e)=>setUserInfo({...userinfo,[e.target.name]:e.target.value})}
@@ -67,12 +88,23 @@ const handleClick=async()=>
         onVisibilityChange={toggle}
         placeholder="Enter password"
         required
+        leftSection={<i className="uil uil-keyhole-circle"></i>}
         name='password'
         onChange={(e)=>setUserInfo({...userinfo,[e.target.name]:e.target.value})}
         />
-      <Button variant="filled"
-      className='logButton'
-      onClick={handleClick} 
+       <div className={style.extraButtons}>
+       <div>
+       <Checkbox
+      label="Remember me"
+      variant="outline"
+      onChange={()=>setAgreeValue(userinfo.email)}
+      />
+      </div>
+        <div onClick={()=>handlePasswordReset(userinfo.email)} className={style.resetPass} style={{fontWeight:'400',color:'#00A',fontSize:'14px',textAlign:'right'}}>Reset Password</div>
+       </div>
+      <Button variant="Outline"
+      className={style.logButton}
+      onClick={handleClick}
       disabled={!userinfo.email && !userinfo.password}
       >Login</Button>
       <p style={{letterSpacing:'0.34px',fontSize:'12px'}}>Visiting first time,<Link style={{fontWeight:'bold',color:'#00A',fontSize:'14px'}} to={"/signup"}>Signup Here</Link></p>
