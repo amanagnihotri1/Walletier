@@ -6,11 +6,12 @@ export interface UserData
 }
 export interface TableData
 {
-    id?:string;
+    _id:string;
     category?:string;
     amount?:number;
-    date?:string;
-    type?:string;  
+    date:Date;
+    entryType?:string;
+
 }
 export interface newsData
 {

@@ -75,6 +75,7 @@ export const Transactions = () => {
  if(timeVal==="1D")
  {
   let queryData=await axios.get(`/currdayentries?userid=${localStorage.getItem('uid')}`);
+  console.log(typeof queryData);
   dispatch(setTableData(queryData?.data));
   return queryData.data;
  } 
@@ -134,7 +135,7 @@ useEffect(()=>
         </Table.Tr>
       </Table.Thead>
     <Table.Tbody>
-    {tableVal?.map((element:any)=> (
+    {Array.isArray(tableVal) && tableVal.map((element:TableData)=> (
     <Table.Tr>
       <Table.Td>#{element._id.slice(0,4)}...</Table.Td>
       <Table.Td>{element.category}</Table.Td>

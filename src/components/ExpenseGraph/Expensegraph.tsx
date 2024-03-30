@@ -14,8 +14,8 @@ const[entertainment,setEntertainment]=useState<number>();
 const authuid=useSelector((state:any)=>state.authReducer.uid) || localStorage.getItem("uid");
 const getExpenseData=async()=>
 {    
-    let res:any=await axios.get(`/getGraphData?uid=${localStorage.getItem('uid')}`);
-    console.log(res);
+    let res=await axios.get(`/getGraphData?uid=${localStorage.getItem('uid')}`);
+    console.log(typeof res);
     setExpenseData(res?.data);
     return res.data;
 }
@@ -23,7 +23,6 @@ const getBillsData=async(categ:string)=>
 {
     let billsData:number=0;
     const data:any=await getExpenseData();
-    console.log(data);
     setExpenseData(data);
     await data?.forEach((item:any)=>
     {
