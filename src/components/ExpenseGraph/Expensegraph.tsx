@@ -90,7 +90,7 @@ authuid && (async()=>
   await getBillsData("Daily Needs");
   await getBillsData("Entertainment");
 })();
-},[bills,daily_needs,other_data,shopping,travel,food,expenseValue]);
+},[]);
 return (
   <>
  {expenseData?(<ResponsiveContainer width="100%" height="100%">
