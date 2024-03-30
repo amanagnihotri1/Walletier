@@ -73,7 +73,7 @@ export const Transactions = () => {
 {  
  if(timeVal==="1D")
  {
-  let queryData:any=await axios.get(`/currdayentries?userid=${authuid}`);
+  let queryData:any=await axios.get(`/currdayentries?userid=${localStorage.getItem('uid')}`);
   dispatch(setTableData(queryData?.data));
   return queryData.data;
  } 
@@ -82,7 +82,6 @@ export const Transactions = () => {
     let prevMonth=sub(new Date(),{months:1}).toString();
     let dateString=format(prevMonth,'MM/dd/yyyy');
     let querData:any=await axios.get(`/lastMonthData?dateVal=${dateString}&uid=${authuid}`);
-    console.log(querData.data);
     dispatch(setTableData(querData?.data));
     return querData.data;
 } 
@@ -135,7 +134,7 @@ useEffect(()=>
         </Table.Tr>
       </Table.Thead>
     <Table.Tbody>
-    {tableVal.map((element:any)=> (
+    {tableVal?.map((element:any)=> (
     <Table.Tr key={element.name}>
       <Table.Td>#{element._id.slice(0,4)}...</Table.Td>
       <Table.Td>{element.category}</Table.Td>

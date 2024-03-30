@@ -17,7 +17,7 @@ const getExpenseData=async()=>
     const res:any=await axios.get(`/getGraphData?uid=${authuid}`);
     console.log(res);
     setExpenseData(res?.data);
-    return res?.data;
+    return res.data;
 }
 const getBillsData=async(categ:string)=>
 {
