@@ -10,10 +10,6 @@ import { Group, Paper, Text, ThemeIcon, SimpleGrid,Tooltip } from '@mantine/core
 import { useSelector,useDispatch } from "react-redux";
 import {ReactComponent as ArrowRightUp} from "../../assets/arrowRightUp.svg";
 import {ReactComponent as ArrowRightDown} from "../../assets/arrowRightDown.svg";
-const icons = {
-  up: ArrowRightUp,
-  down: ArrowRightDown,
-};
 const MonthlyGoal=({uid}:{uid:String})=>{
   const dispatch=useDispatch();
   const[dateVal,setDateVal]=useState<Date | null | undefined>();

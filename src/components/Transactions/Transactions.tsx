@@ -20,7 +20,7 @@ import {Table,Button,SegmentedControl,Modal,Select,Tabs,NumberInput,Transition,A
 import { notifications } from '@mantine/notifications';
 export const Transactions = () => {
   const dispatch=useDispatch();
-  const tableVal=useSelector((state:any)=>state.transReducer.expenseList);
+  const tableVal:[]=useSelector((state:any)=>state.transReducer.expenseList);
   const authuid=useSelector((state:any)=>state.authReducer.uid);
   const[type,setType]=useState<string>("");
   const[amount,setAmount]=useState<number>(0);
@@ -93,7 +93,6 @@ else if(timeVal==="1Y")
   return res.data;
 }
 }
-console.log(tableVal);
 const handleChange=async(e:any)=>
 {
   const response:any=await getData(e);
@@ -135,7 +134,7 @@ useEffect(()=>
       </Table.Thead>
     <Table.Tbody>
     {tableVal?.map((element:any)=> (
-    <Table.Tr key={element.id}>
+    <Table.Tr>
       <Table.Td>#{element._id.slice(0,4)}...</Table.Td>
       <Table.Td>{element.category}</Table.Td>
       <Table.Td>{format(element.date,'dd-MM-yyyy')}</Table.Td>

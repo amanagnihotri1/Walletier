@@ -1,4 +1,4 @@
-import React,{ useEffect,useState} from 'react';
+import React,{ useEffect} from 'react';
 import '@mantine/core/styles/global.css';
 import '@mantine/core/styles/Button.css';
 import '@mantine/core/styles/UnstyledButton.css';
@@ -27,7 +27,6 @@ const dispatch=useDispatch();
     }
   });
  },[]);
-  const userfullName=useSelector((state:any)=>state.authReducer.fullName);
   const authid:any=useSelector((state:any)=>state.authReducer.authuid);
   return (
     <div className={style["mainWrapper"]}>

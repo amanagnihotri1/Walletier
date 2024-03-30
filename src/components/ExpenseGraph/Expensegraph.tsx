@@ -80,7 +80,7 @@ const data02 = [
       ];
 useEffect(()=>
 {
-authuid &&(async()=>
+authuid && (async()=>
 {
   await getBillsData("Bills");
   await getBillsData("Shopping");
