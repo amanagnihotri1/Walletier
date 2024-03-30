@@ -13,9 +13,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import style from "../Login/login.module.scss";
 import { notifications } from '@mantine/notifications';
 import { setAuthDetails } from '../../Auth/authSlice';
+import { userInfo } from 'os';
 export const Login= () => {
  const navigate=useNavigate();
  const dispatch=useDispatch();
+ const[doesExist,setExist]=useState<Boolean>(false);
  const[visible,{toggle}]=useDisclosure(false);
  const[isLoading,setLoading]=useState<boolean>(false);
  const[agreeVal,setAgreeValue]=useState("");
@@ -35,6 +37,21 @@ export const Login= () => {
   else
   {
     return await sendPasswordResetEmail(auth, email);
+  }
+}
+const handleReset=async()=>
+{
+   console.log(auth);
+  const data:any= await sendPasswordResetEmail(auth,userinfo.email);
+  console.log(data);
+  if(!data)
+  {
+    notifications.show({title:"Success",message:'Password Reset link sent successfully',autoClose:2000});
+    setExist(true);
+  }
+  else{
+    notifications.show({title:"error",message:"error found !!"});
+   setExist(false);
   }
 }
 const handleClick=async()=>
@@ -100,7 +117,19 @@ const handleClick=async()=>
       onChange={()=>setAgreeValue(userinfo.email)}
       />
       </div>
-        <div onClick={()=>handlePasswordReset(userinfo.email)} className={style.resetPass} style={{fontWeight:'400',color:'#00A',fontSize:'14px',textAlign:'right'}}>Reset Password</div>
+      <Link to={doesExist?"/auth/action":'/login'} 
+      onClick={handleReset}
+      className={style.resetPass} 
+      style={{
+        fontWeight:'400',
+        color:'#00A',
+        fontSize:'14px',
+        textAlign:'right',
+        display:userinfo.email?'block':'none',
+        }}
+        >
+        Reset Password
+         </Link>
        </div>
       <Button variant="Outline"
       className={style.logButton}

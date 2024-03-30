@@ -21,7 +21,7 @@ function App()
     element:<Login/>,
   },
   {
-    path:'/resetPassword',
+    path:'/auth/action',
     element:<PasswordReset />
   },
   {
