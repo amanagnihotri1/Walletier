@@ -5,7 +5,7 @@ import { Button, Input } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {useNavigate,useSearchParams} from "react-router-dom";
 import { notifications } from '@mantine/notifications';
-import { verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth";
+import { confirmPasswordReset } from "firebase/auth";
 import { PasswordInput } from "@mantine/core";
 export const PasswordReset = () => {
   const navigate=useNavigate();

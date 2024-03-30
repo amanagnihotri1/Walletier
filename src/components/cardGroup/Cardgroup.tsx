@@ -23,7 +23,7 @@ const Cardgroup = () => {
   const getData=async()=>
   {
     const data:any=await axios.get(`/getdailydata?uid=${localStorage.getItem("uid")}`);
-    const graphdata=await axios.get(`/getGraphData?uid=${localStorage.getItem("uid")}`); 
+    const graphdata:any=await axios.get(`/getGraphData?uid=${localStorage.getItem("uid")}`); 
     console.log(graphdata.data);
     console.log(data?.data);
     dispatch(setIncome(data?.data[0]?.totalSum));

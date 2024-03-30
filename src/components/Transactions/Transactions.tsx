@@ -7,7 +7,6 @@ import React,{useState,useEffect} from 'react';
 import { DatePickerInput } from '@mantine/dates';
 import axios from "axios";
 import dayjs from "dayjs";
-import { uuidv4 } from '@firebase/util';
 import {expenseCategories,incomeCategories} from '../../utils/data';
 import style from "../Transactions/transaction.module.scss";
 import { useDispatch,useSelector } from 'react-redux';
@@ -15,19 +14,16 @@ import addImage from "../../assets/plus.png";
 import {sub,format} from "date-fns";
 import { useDisclosure } from '@mantine/hooks';
 import {setTableData } from './transactionSlice';
-import {setExpense, setIncome, setSavings } from '../cardGroup/cardSlice';
+import {setIncome } from '../cardGroup/cardSlice';
 import {Table,Button,SegmentedControl,Modal,Select,Tabs,NumberInput,Transition,ActionIcon} from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 export const Transactions = () => {
   const dispatch=useDispatch();
-  const incomeData=useSelector((state:any)=>state.cardSlice.income);
-  const expenseData=useSelector((state:any)=>state.cardSlice.expenses);
   const tableVal=useSelector((state:any)=>state.transReducer.expenseList);
   const authuid=useSelector((state:any)=>state.authReducer.uid);
   const[type,setType]=useState<string>("");
   const[amount,setAmount]=useState<number>(0);
   const[category,setCategory]=useState<string | null>("");
-  const[tid,setTid]=useState(uuidv4());
   const [opened, { open, close }] = useDisclosure(false);
   const [datevalue, setDateValue] = useState<Date | null>(new Date());
   const handleDateChange=(e:any)=>
@@ -46,7 +42,7 @@ export const Transactions = () => {
     } 
       e.preventDefault();
       console.log(Date);
-      const res=await axios.post("/addentry",{
+      const res:any=await axios.post("/addentry",{
       userId:authuid,
       amount,
       category,
@@ -54,6 +50,7 @@ export const Transactions = () => {
       date:dayjs(datevalue?.toISOString()),
       });
       close();
+      console.log(res);
       const resu=await getData("1D");
       dispatch(setTableData(resu));
       const result:any=await axios.get(`/getdailydata?uid=${localStorage.getItem("uid")}`);
@@ -110,6 +107,7 @@ useEffect(()=>
    dispatch(setTableData(result));
   };
  call();
+// eslint-disable-next-line react-hooks/exhaustive-deps
 },[]);
   return (
     <div className={style["tableWrapper"]}>

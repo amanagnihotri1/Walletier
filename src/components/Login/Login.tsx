@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import '@mantine/core/styles/Notification.css';
 import React,{useState} from 'react';
@@ -13,32 +14,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import style from "../Login/login.module.scss";
 import { notifications } from '@mantine/notifications';
 import { setAuthDetails } from '../../Auth/authSlice';
-import { userInfo } from 'os';
 export const Login= () => {
  const navigate=useNavigate();
  const dispatch=useDispatch();
  const[doesExist,setExist]=useState<Boolean>(false);
  const[visible,{toggle}]=useDisclosure(false);
- const[isLoading,setLoading]=useState<boolean>(false);
- const[agreeVal,setAgreeValue]=useState("");
+ const[isLoading,setLoading]=useState(false);
+ const[agreeVal,setAgreeValue]=useState('');
  const[userinfo,setUserInfo]=useState<{email:string; password:string}>({
   email:'',
   password:'',
 });
- const handlePasswordReset = async (email: string) => {
-  if(!email)
-  {
-    notifications.show({
-    title: 'Error',
-    message: 'Missing field:Email 🤥',
-    autoClose:2000,
-  })
-  }
-  else
-  {
-    return await sendPasswordResetEmail(auth, email);
-  }
-}
 const handleReset=async()=>
 {
    console.log(auth);
