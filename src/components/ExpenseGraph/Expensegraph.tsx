@@ -24,7 +24,7 @@ const getBillsData=async(categ:string)=>
     let billsData:number=0;
     const data:any=await getExpenseData();
     setExpenseData(data);
-    await data?.forEach((item:any)=>
+    Array.isArray(data) && data.forEach((item:any)=>
     {
         if(item.category===categ)
         {

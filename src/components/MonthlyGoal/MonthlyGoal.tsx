@@ -61,7 +61,7 @@ useEffect(()=>
 const call=async()=>
 {
   let dateString=format(new Date(),"MM/dd/yyyy");
-  const data=await axios.get(`/particularMonthData?dateVal=${dateString}&uid=${localStorage.getItem("uid")}`);
+  const data:any=await axios.get(`/particularMonthData?dateVal=${dateString}&uid=${localStorage.getItem("uid")}`);
   console.log(data.data[0]);
   const prevMonthDateString=format(subMonths(dateString,1),"MM/dd/yyyy");
   const prevMonthData=await axios.get(`/particularMonthData?dateVal=${prevMonthDateString}&uid=${localStorage.getItem("uid")}`);
