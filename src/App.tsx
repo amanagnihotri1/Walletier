@@ -32,10 +32,6 @@ function App()
     path:"/signup",
     element:<Signup/>,
   },
-  {
-    path:'/reports',
-    element:<GenReports/>
-  },
   ]);
   return (
     <Provider store={store}>
