@@ -44,7 +44,7 @@ export const Transactions = () => {
     } 
       e.preventDefault();
       console.log(Date);
-      const res:any=await axios.post("/addentry",{
+      const res:any=await axios.post(`${process.env.REACT_APP_BASE_URL}/addentry`,{
       userId:authuid,
       amount,
       category,
@@ -55,7 +55,7 @@ export const Transactions = () => {
       console.log(res);
       const resu=await getData("1D");
       dispatch(setTableData(resu));
-      const result:any=await axios.get(`/getdailydata?uid=${localStorage.getItem("uid")}`);
+      const result:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/getdailydata?uid=${localStorage.getItem("uid")}`);
      category==="Income"?dispatch(setIncome(result?.data[1]?.totalSum)):dispatch(setIncome(result?.data[0]?.totalSum))
       notifications.show({title:"Success",message:"Entry created successfully",autoClose:2000}); 
     }catch(err:any)
@@ -74,7 +74,7 @@ export const Transactions = () => {
 {  
  if(timeVal==="1D")
  {
-  let queryData=await axios.get(`/currdayentries?userid=${localStorage.getItem('uid')}`);
+  let queryData=await axios.get(`${process.env.REACT_APP_BASE_URL}/currdayentries?userid=${localStorage.getItem('uid')}`);
   console.log(typeof queryData);
   dispatch(setTableData(queryData?.data));
   return queryData.data;
@@ -83,13 +83,13 @@ export const Transactions = () => {
   { 
     let prevMonth=sub(new Date(),{months:1}).toString();
     let dateString=format(prevMonth,'MM/dd/yyyy');
-    let querData:any=await axios.get(`/lastMonthData?dateVal=${dateString}&uid=${authuid}`);
+    let querData:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/lastMonthData?dateVal=${dateString}&uid=${authuid}`);
     dispatch(setTableData(querData?.data));
     return querData.data;
 } 
 else if(timeVal==="1Y")
 {
-  let res:any=await axios.get(`/lastYearData?userid=${localStorage.getItem("uid")}`);
+  let res:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/lastYearData?userid=${localStorage.getItem("uid")}`);
   console.log(res?.data);
   dispatch(setTableData(res?.data));
   return res.data;

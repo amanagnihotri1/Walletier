@@ -34,11 +34,11 @@ const calcDiff=(currMonth:number,lastMonthData:number):number=>
 const handleChange=async(e:any)=>
 {
   const dateString=format(e,"MM/dd/yyyy");
-  const resultData=await axios.get(`/particularMonthData?dateVal=${dateString}&uid=${localStorage.getItem("uid")}`);
+  const resultData=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${dateString}&uid=${localStorage.getItem("uid")}`);
   const lastDateString=subMonths(dateString,1);
   const lastMonthDateString=format(lastDateString,'MM/dd/yyyy');
   console.log(lastMonthDateString);
-  const prevMonthResult=await axios.get(`/particularMonthData?dateVal=${lastMonthDateString}&uid=${localStorage.getItem("uid")}`);
+  const prevMonthResult=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${lastMonthDateString}&uid=${localStorage.getItem("uid")}`);
   let expenseVal:number=parseInt(resultData?.data[0]?.totalSum);
   let incomeVal:number=parseInt(resultData?.data[1]?.totalSum);
   let currSavings:number=incomeVal-expenseVal;
@@ -62,10 +62,10 @@ useEffect(()=>
 const call=async()=>
 {
   let dateString=format(new Date(),"MM/dd/yyyy");
-  const data:any=await axios.get(`/particularMonthData?dateVal=${dateString}&uid=${localStorage.getItem("uid")}`);
+  const data:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${dateString}&uid=${localStorage.getItem("uid")}`);
   console.log(data.data[0]);
   const prevMonthDateString=format(subMonths(dateString,1),"MM/dd/yyyy");
-  const prevMonthData=await axios.get(`/particularMonthData?dateVal=${prevMonthDateString}&uid=${localStorage.getItem("uid")}`);
+  const prevMonthData=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${prevMonthDateString}&uid=${localStorage.getItem("uid")}`);
   let savingVal:number=parseInt(data?.data[1]?.totalSum)-parseInt(data?.data[0]?.totalSum);
   savingVal<0 &&(savingVal=0)
   const incomeVal:number=parseInt(data?.data[1]?.totalSum);

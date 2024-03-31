@@ -2,7 +2,6 @@
   "name": "expense_tracker",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://walletier-backend.onrender.com/api",
   "dependencies": {
     "@mantine/carousel": "^7.4.0",
     "@mantine/charts": "^7.4.0",

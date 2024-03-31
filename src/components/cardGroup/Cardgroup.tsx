@@ -20,8 +20,8 @@ const Cardgroup = () => {
   const incomeValue=useSelector((state:any)=>state.cardSlice.income);
   const getData=async()=>
   {
-    const data:any=await axios.get(`/getdailydata?uid=${localStorage.getItem("uid")}`);
-    const graphdata:any=await axios.get(`/getGraphData?uid=${localStorage.getItem("uid")}`); 
+    const data:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/getdailydata?uid=${localStorage.getItem("uid")}`);
+    const graphdata:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/getGraphData?uid=${localStorage.getItem("uid")}`); 
     console.log(graphdata.data);
     console.log(data?.data);
     dispatch(setIncome(data?.data[0]?.totalSum));
