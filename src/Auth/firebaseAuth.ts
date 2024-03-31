@@ -1,5 +1,5 @@
 import { initializeApp} from 'firebase/app';
-import { getAuth,sendPasswordResetEmail,confirmPasswordReset } from 'firebase/auth';
+import { getAuth,confirmPasswordReset } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 export const firebaseConfig=
 {
