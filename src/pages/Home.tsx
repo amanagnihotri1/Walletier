@@ -26,6 +26,7 @@ const dispatch=useDispatch();
       dispatch(clearAuthDetails());
     }
   });
+ // eslint-disable-next-line react-hooks/exhaustive-deps
  },[]);
   const authid:any=useSelector((state:any)=>state.authReducer.authuid);
   return (

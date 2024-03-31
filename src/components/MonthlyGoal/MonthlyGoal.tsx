@@ -12,6 +12,7 @@ import {ReactComponent as ArrowRightUp} from "../../assets/arrowRightUp.svg";
 import {ReactComponent as ArrowRightDown} from "../../assets/arrowRightDown.svg";
 const MonthlyGoal=({uid}:{uid:String})=>{
   const dispatch=useDispatch();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const[dateVal,setDateVal]=useState<Date | null | undefined>();
 const incomeVal=useSelector((state:any)=>state.monthlyDataReducer.income);
 const expenseVal=useSelector((state:any)=>state.monthlyDataReducer.expense);
@@ -82,6 +83,7 @@ const call=async()=>
     prevMonthSaving:parseInt(savingValComp.toFixed(2))}));
   }    
 call();
+// eslint-disable-next-line react-hooks/exhaustive-deps
 },[]);
   const stats = data.map((stat) => {
     const DiffIcon = stat.diff > 0 ?ArrowRightUp:ArrowRightDown;

@@ -89,6 +89,7 @@ authuid && (async()=>
   await getBillsData("Daily Needs");
   await getBillsData("Entertainment");
 })();
+// eslint-disable-next-line react-hooks/exhaustive-deps
 },[]);
 return (
   <>

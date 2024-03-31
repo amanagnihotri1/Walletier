@@ -12,7 +12,6 @@ import {
 import {Provider} from 'react-redux';
 import { PasswordReset } from "./components/PasswordReset/PasswordReset";
 import { Signup } from './components/Signup/Signup';
-import { GenReports } from "./pages/GenReports";
 function App() 
 {
   const router=createBrowserRouter([

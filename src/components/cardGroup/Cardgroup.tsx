@@ -33,6 +33,7 @@ const Cardgroup = () => {
      await getData();
     }
     call();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
   return (
     <div className={style["cardWrapper"]}>
