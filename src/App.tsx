@@ -12,6 +12,7 @@ import {
 import {Provider} from 'react-redux';
 import { PasswordReset } from "./components/PasswordReset/PasswordReset";
 import { Signup } from './components/Signup/Signup';
+import { TermsConditions } from "./components/T&C/TermsConditions";
 function App() 
 {
   const router=createBrowserRouter([
@@ -31,6 +32,10 @@ function App()
     path:"/signup",
     element:<Signup/>,
   },
+  {
+    path:'/termsConditions',
+    element:<TermsConditions/>
+  }
   ]);
   return (
     <Provider store={store}>

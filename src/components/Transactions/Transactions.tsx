@@ -16,7 +16,7 @@ import {sub,format} from "date-fns";
 import { useDisclosure } from '@mantine/hooks';
 import {setTableData } from './transactionSlice';
 import {setIncome } from '../cardGroup/cardSlice';
-import {Table,Button,SegmentedControl,Modal,Select,Tabs,NumberInput,Transition,ActionIcon} from '@mantine/core';
+import {Table,Button,SegmentedControl,Modal,Select,Tabs,NumberInput,Transition,ActionIcon,Badge} from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { TableData } from '../../app/TypeInterfaces';
 export const Transactions = () => {
@@ -24,10 +24,15 @@ export const Transactions = () => {
   const tableVal:TableData[]=useSelector((state:any)=>state.transReducer.expenseList);
   const authuid=useSelector((state:any)=>state.authReducer.uid);
   const[type,setType]=useState<string>("");
+  const[editAmount,setEditAmount]=useState(0);
   const[amount,setAmount]=useState<number>(0);
   const[category,setCategory]=useState<string | null>("");
+  const[editTid,setEditTid]=useState<string>();
   const [opened, { open, close }] = useDisclosure(false);
+  const[editModal,setEditModal]=useState(false);
+  const[editCategory,seteditCategory]=useState<string | null | undefined>();
   const [datevalue, setDateValue] = useState<Date | null>(new Date());
+  const[editEntryBox,seteditEntryBox]=useState();
   const handleDateChange=(e:any)=>
   {
      setDateValue(e);
@@ -63,9 +68,28 @@ export const Transactions = () => {
       notifications.show({title:"Error",message:err.message});
     }
  }
+ const handleEditForm=async(e:any)=>
+  {
+    try{
+      e.preventDefault();
+      const results=await axios.patch(`${process.env.REACT_APP_BASE_URL}/editEntry`,{
+        entryId:editTid,
+        entryCat:editCategory,
+        entryAmt:editAmount
+      });
+      console.log(results);
+      notifications.show({title:'Success',message:'Entry updated successfully'});
+      setEditModal(!editModal);
+    }catch(err:any){
+     notifications.show({title:'Failed',message:err.message});
+     setEditModal(!editModal); 
+    }
+
+  }
  const handleDelete=async(e:any)=>{
   console.log(e.currentTarget.value);
-   const data=await axios.delete(`/deleteEntry?entryId=${e.currentTarget.value}`);
+  console.log(e);
+   const data=await axios.delete(`${process.env.REACT_APP_BASE_URL}/deleteEntry?entryId=${e.currentTarget.value}`);
    console.log(data);
    const result=await getData("1D"); 
     dispatch(setTableData(result));
@@ -94,6 +118,12 @@ else if(timeVal==="1Y")
   dispatch(setTableData(res?.data));
   return res.data;
 }
+}
+const handleEditSlider=(e:any)=>{
+ seteditEntryBox(e);
+ console.log(e);
+ console.log(editEntryBox);
+  seteditCategory(null);
 }
 const handleChange=async(e:any)=>
 {
@@ -127,7 +157,7 @@ useEffect(()=>
       <Table.Thead>
         <Table.Tr>
           <Table.Th>Transaction ID</Table.Th>
-          <Table.Th>Category name</Table.Th>
+          <Table.Th>Category</Table.Th>
           <Table.Th>Date</Table.Th>
           <Table.Th>Type</Table.Th>
           <Table.Th>Amount</Table.Th>
@@ -143,10 +173,10 @@ useEffect(()=>
       <Table.Td>{element.entryType}</Table.Td>
       <Table.Td style={{color:element.entryType==="Expense"?'red':'magenta'}}>{element.entryType==="Expense"?`- ₹ ${element.amount}`:`+₹ ${element.amount}`}</Table.Td>
       <Table.Td style={{display:'flex',flexWrap:'wrap',alignItems:'center',justifyContent:'center'}}>
-      <ActionIcon variant="outline" aria-label='Delete' value={element._id} onClick={(e)=>handleDelete(e)}>
+      <ActionIcon variant="outline" aria-label='Delete' value={element._id} onClick={handleDelete}>
       <i className="uil uil-trash-alt"></i>   
         </ActionIcon>
-      <ActionIcon variant='outline' aria-label="Edit" mx={10}>
+      <ActionIcon variant='outline' value={element._id} aria-label="Edit" mx={10} onClick={(e)=>{setEditModal(true); setEditTid(e.currentTarget.value)}}>
       <i className="uil uil-pen"></i>
       </ActionIcon>
     </Table.Td>
@@ -243,6 +273,31 @@ useEffect(()=>
       </Modal>
     }
     </Transition>
+    <Modal opened={editModal} onClose={()=>setEditModal(!editModal)} title="Edit Entry" centered>
+    <form onSubmit={handleEditForm}>
+      <div style={{margin:'10px 0px',fontWeight:'600'}}>Transaction Id:<Badge color='#8338ec'>{editTid}</Badge></div>
+    <SegmentedControl color={'magenta'}defaultValue={'Expense'} onChange={handleEditSlider} data={['Expense','Income']} 
+    />
+    <Select
+     withAsterisk
+     label="Category"
+     placeholder="Select Category"
+     data={editEntryBox==="Expense"?expenseCategories:incomeCategories}
+     value={editCategory}
+     onChange={(e:any)=>{seteditCategory(e);}}
+     />
+     <NumberInput 
+     withAsterisk
+     label="Amount"
+     type="text"
+     allowNegative={false}
+     placeholder="Type Value"
+     value={editAmount}
+     onChange={(e:any)=>setEditAmount(e)}
+     />
+     <Button variant="outline" type='submit'className={style['submitButton']}>Submit</Button>
+    </form>
+    </Modal>
     </div>
   )
 }

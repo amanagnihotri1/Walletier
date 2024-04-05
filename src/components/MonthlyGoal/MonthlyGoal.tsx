@@ -29,6 +29,7 @@ const calcDiff=(currMonth:number,lastMonthData:number):number=>
 {
   let newVal:number=currMonth-lastMonthData;
   let dataValue:number=parseInt(((newVal/lastMonthData)*100).toFixed(2));
+  dataValue<0 && (dataValue=0)
   return dataValue;
 }
 const handleChange=async(e:any)=>
@@ -42,7 +43,8 @@ const handleChange=async(e:any)=>
   let expenseVal:number=parseInt(resultData?.data[0]?.totalSum);
   let incomeVal:number=parseInt(resultData?.data[1]?.totalSum);
   let currSavings:number=incomeVal-expenseVal;
-  let prevMonthExpense=await calcDiff(parseInt(resultData?.data[0]?.totalSum),parseInt(prevMonthResult?.data[0]?.totalSum));
+  currSavings<0 && (currSavings=0)
+  let prevMonthExpense=calcDiff(parseInt(resultData?.data[0]?.totalSum),parseInt(prevMonthResult?.data[0]?.totalSum));
   let prevMonthIncome=calcDiff(parseInt(resultData?.data[1]?.totalSum),parseInt(prevMonthResult?.data[1]?.totalSum));
   let prevMonthSavingNumber:number=prevMonthIncome-prevMonthExpense;
   prevMonthSavingNumber<0 &&(prevMonthSavingNumber=0)
