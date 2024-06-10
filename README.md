@@ -7,10 +7,9 @@
 https://expensetracker-cd16f.web.app/signup
 ## Tech Stack
 <p align="center">
-  <a href="https://expensetracker-cd16f.web.app/signup">
     <img src="https://skillicons.dev/icons?i=firebase" />
-  </a>
     <img src="https://skillicons.dev/icons?i=react" />
+    <img src="https://skillicons.dev/icons?i=nodejs" />
     <img src="https://skillicons.dev/icons?i=css" />
     <img src="https://skillicons.dev/icons?i=redux" />
 </p>
