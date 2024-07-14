@@ -38,7 +38,6 @@ const handleChange=async(e:any)=>
   const resultData=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${dateString}&uid=${localStorage.getItem("uid")}`);
   const lastDateString=subMonths(dateString,1);
   const lastMonthDateString=format(lastDateString,'MM/dd/yyyy');
-  console.log(lastMonthDateString);
   const prevMonthResult=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${lastMonthDateString}&uid=${localStorage.getItem("uid")}`);
   let expenseVal:number=parseInt(resultData?.data[0]?.totalSum);
   let incomeVal:number=parseInt(resultData?.data[1]?.totalSum);
@@ -49,7 +48,6 @@ const handleChange=async(e:any)=>
   let prevMonthSavingNumber:number=prevMonthIncome-prevMonthExpense;
   prevMonthSavingNumber<0 &&(prevMonthSavingNumber=0)
   let prevMonthSavingComp=calcDiff(currSavings,prevMonthSavingNumber);
-  console.log(prevMonthExpense+0,prevMonthIncome+0,prevMonthSavingComp+0);
   dispatch(setMonthlyData({
     expense:expenseVal,
     income:incomeVal,
@@ -65,12 +63,12 @@ const call=async()=>
 {
   let dateString=format(new Date(),"MM/dd/yyyy");
   const data:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${dateString}&uid=${localStorage.getItem("uid")}`);
-  console.log(data.data[0]);
+  console.log(data);
   const prevMonthDateString=format(subMonths(dateString,1),"MM/dd/yyyy");
   const prevMonthData=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${prevMonthDateString}&uid=${localStorage.getItem("uid")}`);
   let savingVal:number=parseInt(data?.data[1]?.totalSum)-parseInt(data?.data[0]?.totalSum);
-  savingVal<0 &&(savingVal=0)
   const incomeVal:number=parseInt(data?.data[1]?.totalSum);
+  console.log(incomeVal);
   const expenseVal:number=parseInt(data?.data[0]?.totalSum);
   const incomeComp=calcDiff(parseInt(data?.data[1]?.totalSum),parseInt(prevMonthData?.data[1]?.totalSum));
   const expenseComp=calcDiff(parseInt(data?.data[0]?.totalSum),parseInt(prevMonthData?.data[0]?.totalSum));

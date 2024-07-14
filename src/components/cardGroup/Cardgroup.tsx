@@ -1,7 +1,7 @@
 import style from "../cardGroup/cardgroup.module.scss";
 import '@mantine/core/styles/Badge.css';
 import '@mantine/core/styles/Tooltip.css';
-import React from "react";
+import React,{useState} from "react";
 import CountUp from 'react-countup';
 import axios from "axios";
 import coinImage from "../../assets/coin.png";
@@ -18,19 +18,20 @@ const Cardgroup = () => {
   const dispatch=useDispatch();
   const expenseValue=useSelector((state:any)=>state.cardSlice.expenses);
   const incomeValue=useSelector((state:any)=>state.cardSlice.income);
-  const getData=async()=>
+  const [expenseGraphData,setExpenseGraph]=useState([]);
+  const[incomeGraphData,setIncoomeGraph]=useState([]);
+  const getCardData=async()=>
   {
     const data:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/getdailydata?uid=${localStorage.getItem("uid")}`);
     const graphdata:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/getGraphData?uid=${localStorage.getItem("uid")}`); 
-    console.log(graphdata.data);
-    console.log(data?.data);
-    dispatch(setIncome(data?.data[0]?.totalSum));
-    dispatch(setExpense(data?.data[1]?.totalSum));
+    dispatch(setIncome(data?.data[1]?.totalSum));
+    dispatch(setExpense(data?.data[0]?.totalSum))
   }
+
   useEffect(()=>
   {
     async function call(){
-     await getData();
+     await getCardData();
     }
     call();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,7 +73,7 @@ const Cardgroup = () => {
        <Sparkline
       w={"100%"}
       h={120}
-      data={[10, 200, 40, 20, 40, 10, 50]}
+      data={[0,3,4,2,3]}
       curveType="linear"
       color="magenta"
       fillOpacity={0.6}

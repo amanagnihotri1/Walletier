@@ -27,9 +27,7 @@ export const Login= () => {
 });
 const handleReset=async()=>
 {
-   console.log(auth);
   const data:any= await sendPasswordResetEmail(auth,userinfo.email);
-  console.log(data);
   if(!data)
   {
     notifications.show({title:"Success",message:'Password Reset link sent successfully',autoClose:2000});
@@ -49,7 +47,6 @@ const handleClick=async()=>
        const userCred=await signInWithEmailAndPassword(auth,email,password);
        const usermain = userCred.user;
        localStorage.setItem("uid",usermain.uid);
-       console.log(usermain);
        dispatch(setAuthDetails({useremail:usermain?.email,fullName:usermain?.displayName,uid:usermain?.uid}));
        usermain && navigate("/");
        notifications.show({title:"Success",message:"User loggedin successfully"});

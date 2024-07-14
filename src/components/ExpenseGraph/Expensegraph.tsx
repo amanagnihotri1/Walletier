@@ -1,9 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import { PieChart,Pie,Cell,Tooltip,Legend, ResponsiveContainer } from 'recharts';
-import { useSelector,useDispatch } from 'react-redux';
 import axios from 'axios';
 export const Expensegraph = () => {
-  const dispatch=useDispatch();
 const[expenseData,setExpenseData]=useState();
 const[bills,setBills]=useState<number>();
 const[travel,setTravel]=useState<number>();
@@ -12,12 +10,9 @@ const[shopping,setShopping]=useState<number>();
 const[other_data,setOtherData]=useState<number>();
 const[daily_needs,setDailyNeeds]=useState<number>();
 const[entertainment,setEntertainment]=useState<number>();
-const authuid=useSelector((state:any)=>state.authReducer.uid) || localStorage.getItem("uid");
-const expenseVal=useSelector((state:any)=>state.monthlyDataReducer.expense);
 const getExpenseData=async()=>
-{    
+{  
     let res=await axios.get(`${process.env.REACT_APP_BASE_URL}/getGraphData?uid=${localStorage.getItem('uid')}`);
-    console.log(typeof res);
     setExpenseData(res?.data);
     return res.data;
 }
@@ -80,7 +75,7 @@ const data02 = [
       ];
 useEffect(()=>
 {
-authuid && (async()=>
+(async()=>
 {
   await getBillsData("Bills");
   await getBillsData("Shopping");
@@ -91,7 +86,7 @@ authuid && (async()=>
   await getBillsData("Entertainment");
 })();
 // eslint-disable-next-line react-hooks/exhaustive-deps
-},[expenseVal,dispatch]);
+},[]);
 return (
   <>
  {expenseData?(<ResponsiveContainer width="100%" height="100%">

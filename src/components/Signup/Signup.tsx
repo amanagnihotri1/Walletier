@@ -68,7 +68,6 @@ const handleLogin=async()=>
     title:"Success",
     message:"Logged in successfully.",  
   })
-  console.log(response);
   }catch(err:any)
   {
     notifications.show({

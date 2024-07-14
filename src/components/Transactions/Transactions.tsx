@@ -15,7 +15,7 @@ import addImage from "../../assets/plus.png";
 import {sub,format} from "date-fns";
 import { useDisclosure } from '@mantine/hooks';
 import {setTableData } from './transactionSlice';
-import {setIncome } from '../cardGroup/cardSlice';
+import {setIncome,setExpense } from '../cardGroup/cardSlice';
 import {Table,Button,SegmentedControl,Modal,Select,Tabs,NumberInput,Transition,ActionIcon,Badge} from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { TableData } from '../../app/TypeInterfaces';
@@ -37,7 +37,6 @@ export const Transactions = () => {
   {
      setDateValue(e);
   }
-  console.log(Date().toString());
   const handleSubmit=async(e:any)=>
  { 
    try
@@ -48,20 +47,18 @@ export const Transactions = () => {
     return new Error(`Error filed missing`);
     } 
       e.preventDefault();
-      console.log(Date);
       const res:any=await axios.post(`${process.env.REACT_APP_BASE_URL}/addentry`,{
       userId:authuid,
       amount,
       category,
       entryType:type,
-      date:dayjs(datevalue?.toISOString()),
+      date:dayjs(datevalue?.toISOString())
       });
       close();
-      console.log(res);
       const resu=await getData("1D");
       dispatch(setTableData(resu));
       const result:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/getdailydata?uid=${localStorage.getItem("uid")}`);
-     category==="Income"?dispatch(setIncome(result?.data[1]?.totalSum)):dispatch(setIncome(result?.data[0]?.totalSum))
+      category==="Income"?dispatch(setIncome(result?.data[1]?.totalSum)):dispatch(setExpense(result?.data[0]?.totalSum))
       notifications.show({title:"Success",message:"Entry created successfully",autoClose:2000}); 
     }catch(err:any)
     {
@@ -77,7 +74,6 @@ export const Transactions = () => {
         entryCat:editCategory,
         entryAmt:editAmount
       });
-      console.log(results);
       notifications.show({title:'Success',message:'Entry updated successfully'});
       setEditModal(!editModal);
     }catch(err:any){
@@ -86,10 +82,8 @@ export const Transactions = () => {
     }
 
   }
- const handleDelete=async(e:any)=>{
-  console.log(e.currentTarget.value);
-  console.log(e);
-   const data=await axios.delete(`${process.env.REACT_APP_BASE_URL}/deleteEntry?entryId=${e.currentTarget.value}`);
+ const handleDelete=async(tid:string)=>{
+   const data=await axios.delete(`${process.env.REACT_APP_BASE_URL}/deleteEntry?entryId=${tid}`);
    console.log(data);
    const result=await getData("1D"); 
     dispatch(setTableData(result));
@@ -99,7 +93,6 @@ export const Transactions = () => {
  if(timeVal==="1D")
  {
   let queryData=await axios.get(`${process.env.REACT_APP_BASE_URL}/currdayentries?userid=${localStorage.getItem('uid')}`);
-  console.log(typeof queryData);
   dispatch(setTableData(queryData?.data));
   return queryData.data;
  } 
@@ -110,25 +103,22 @@ export const Transactions = () => {
     let querData:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/lastMonthData?dateVal=${dateString}&uid=${authuid}`);
     dispatch(setTableData(querData?.data));
     return querData.data;
-} 
+
+  } 
 else if(timeVal==="1Y")
 {
   let res:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/lastYearData?userid=${localStorage.getItem("uid")}`);
-  console.log(res?.data);
   dispatch(setTableData(res?.data));
   return res.data;
 }
 }
 const handleEditSlider=(e:any)=>{
  seteditEntryBox(e);
- console.log(e);
- console.log(editEntryBox);
   seteditCategory(null);
 }
 const handleChange=async(e:any)=>
 {
   const response:any=await getData(e);
-  console.log(response);
   dispatch(setTableData(response));
 }
 useEffect(()=>
@@ -149,7 +139,7 @@ useEffect(()=>
        <Button leftSection={<img src={addImage} alt='Not Found' width={"10px"} height={"10px"}/>} onClick={open} variant="default">
         Add
       </Button>
-      <SegmentedControl color="magenta" data={['1D', '1M', '1Y']} onChange={handleChange} />
+      <SegmentedControl color="magenta" data={["1D", '1M', '1Y']} onChange={handleChange} />
       </div>
       </div>
       <Table.ScrollContainer minWidth={500}>
@@ -173,7 +163,7 @@ useEffect(()=>
       <Table.Td>{element.entryType}</Table.Td>
       <Table.Td style={{color:element.entryType==="Expense"?'red':'magenta'}}>{element.entryType==="Expense"?`- ₹ ${element.amount}`:`+₹ ${element.amount}`}</Table.Td>
       <Table.Td style={{display:'flex',flexWrap:'wrap',alignItems:'center',justifyContent:'center'}}>
-      <ActionIcon variant="outline" aria-label='Delete' value={element._id} onClick={handleDelete}>
+      <ActionIcon variant="outline" aria-label='Delete' value={element._id} onClick={(e)=>handleDelete(e.currentTarget.value)}>
       <i className="uil uil-trash-alt"></i>   
         </ActionIcon>
       <ActionIcon variant='outline' value={element._id} aria-label="Edit" mx={10} onClick={(e)=>{setEditModal(true); setEditTid(e.currentTarget.value)}}>
@@ -222,7 +212,6 @@ useEffect(()=>
       <NumberInput
       withAsterisk
       label="Amount"
-      type="text"
       allowNegative={false}
       placeholder="Enter value"
       value={amount}
@@ -240,7 +229,7 @@ useEffect(()=>
       </form>
      </Tabs.Panel>
      <Tabs.Panel value='Income' onClick={()=>setType("Income")}>
-     <form  onSubmit={handleSubmit}>
+     <form onSubmit={handleSubmit}>
        <Select
        withAsterisk
        label="Source of income"
@@ -254,7 +243,6 @@ useEffect(()=>
       withAsterisk
       label="Amount"
       allowNegative={false}
-      type="tel"
       placeholder="Enter value"
       value={amount}
       onChange={(e:any)=>setAmount(e)}/>
@@ -275,8 +263,17 @@ useEffect(()=>
     </Transition>
     <Modal opened={editModal} onClose={()=>setEditModal(!editModal)} title="Edit Entry" centered>
     <form onSubmit={handleEditForm}>
-      <div style={{margin:'10px 0px',fontWeight:'600'}}>Transaction Id:<Badge color='#8338ec'>{editTid}</Badge></div>
-    <SegmentedControl color={'magenta'}defaultValue={'Expense'} onChange={handleEditSlider} data={['Expense','Income']} 
+      <div 
+      style={{
+        margin:'10px 0px',
+        fontWeight:'600'
+        }}>
+          Transaction Id:<Badge color='#8338ec'>{editTid}</Badge></div>
+    <SegmentedControl 
+    color={'magenta'} 
+    defaultValue={'Expense'} 
+    onChange={handleEditSlider} 
+    data={["Expense","Income"]} 
     />
     <Select
      withAsterisk

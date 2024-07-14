@@ -27,7 +27,6 @@ const HandleLogout=async()=>
   } 
   const userName=useSelector((state:any)=>state.authReducer.fullName);
   const userprofile=useSelector((state:any)=>state.authReducer.profileImage);
-  console.log(userprofile); 
   return (
       <div className={style["menuList"]}>
         <div className={style['linkWrapper']}>
@@ -41,12 +40,12 @@ const HandleLogout=async()=>
         </div>
      </div>
      <div className={style["roundedButton"]}>
-      <div className={style["group"]}>
+      {userName && <div className={style["group"]}>
       <div className={style["usericon"]}>
     <img src={userprofile} alt="not_found" />
     </div>
     <h3>{userName}</h3>
-    </div>
+    </div>}
     <Button variant="filled" color={"#ffffff"} style={{width:'100%'}} onClick={HandleLogout}>Logout</Button>
     </div>
      </div> 
