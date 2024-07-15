@@ -47,6 +47,7 @@ export const Transactions = () => {
     return new Error(`Error filed missing`);
     } 
       e.preventDefault();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const res:any=await axios.post(`${process.env.REACT_APP_BASE_URL}/addentry`,{
       userId:authuid,
       amount,
@@ -69,6 +70,7 @@ export const Transactions = () => {
   {
     try{
       e.preventDefault();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const results=await axios.patch(`${process.env.REACT_APP_BASE_URL}/editEntry`,{
         entryId:editTid,
         entryCat:editCategory,
@@ -100,10 +102,9 @@ export const Transactions = () => {
   { 
     let prevMonth=sub(new Date(),{months:1}).toString();
     let dateString=format(prevMonth,'MM/dd/yyyy');
-    let querData:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/lastMonthData?dateVal=${dateString}&uid=${authuid}`);
+    let querData:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/lastMonthData?dateVal=${dateString}&uid=${localStorage.getItem('uid')}`);
     dispatch(setTableData(querData?.data));
     return querData.data;
-
   } 
 else if(timeVal==="1Y")
 {
