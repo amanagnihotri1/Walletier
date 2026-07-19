@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import '@mantine/core/styles/Notification.css';
+import axios from 'axios';
 import React,{useState} from 'react';
 import '@mantine/core/styles/Loader.css';
 import brandLogo from "../../assets/wallet.png";
 import '@mantine/core/styles/LoadingOverlay.css';
-import { auth } from '../../Auth/firebaseAuth';
-import { getAuth,signInWithEmailAndPassword,sendPasswordResetEmail} from 'firebase/auth';
 import { TextInput,PasswordInput,Button,LoadingOverlay,Checkbox,Text} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useDispatch} from 'react-redux';
+import { useDispatch,useSelector} from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import style from "../Login/login.module.scss";
 import { notifications } from '@mantine/notifications';
@@ -17,38 +16,34 @@ import { setAuthDetails } from '../../Auth/authSlice';
 export const Login= () => {
  const navigate=useNavigate();
  const dispatch=useDispatch();
- const[doesExist,setExist]=useState<Boolean>(false);
+ const useremail=useSelector((state:any)=>state.authReducer.useremail);
  const[visible,{toggle}]=useDisclosure(false);
  const[isLoading,setLoading]=useState(false);
  const[agreeVal,setAgreeValue]=useState('');
  const[userinfo,setUserInfo]=useState<{email:string; password:string}>({
   email:'',
-  password:'',
+  password:''
 });
-const handleReset=async()=>
-{
-  const data:any= await sendPasswordResetEmail(auth,userinfo.email);
-  if(!data)
-  {
-    notifications.show({title:"Success",message:'Password Reset link sent successfully',autoClose:2000});
-    setExist(true);
-  }
-  else{
-    notifications.show({title:"error",message:"error found !!"});
-   setExist(false);
-  }
-}
 const handleClick=async()=>
 {   
   try
   {    
-       const auth=getAuth();
        const{email,password}=userinfo;
-       const userCred=await signInWithEmailAndPassword(auth,email,password);
-       const usermain = userCred.user;
-       localStorage.setItem("uid",usermain.uid);
-       dispatch(setAuthDetails({useremail:usermain?.email,fullName:usermain?.displayName,uid:usermain?.uid}));
-       usermain && navigate("/");
+       const usermain:any=await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/login`,{userEmail:email,userPass:password},{withCredentials:true});
+       console.log(usermain.data.userDetails.email);
+       localStorage.setItem("tknum",usermain.data.token);
+       localStorage.setItem("uid",usermain.data.userDetails._id);
+       localStorage.setItem("useremail",usermain.data.userDetails.email);
+       localStorage.setItem("fullName",usermain.data.userDetails.fullName);
+       localStorage.setItem("profileImage",usermain.data.userDetails.profileImage);
+       dispatch(setAuthDetails({
+         useremail: usermain.data.userDetails.email, fullName: usermain.data.userDetails?.fullName, uid: usermain.data.userDetails._id, token: usermain.data.token,
+         profileImage: usermain.data.userDetails.profileImage,
+         monthlyGoal: usermain.data.userDetails.monthlyGoal,
+         error: ''
+       }));
+       console.log(useremail);
+       usermain.data.userDetails && navigate(`/user/${localStorage.getItem("uid")}`);
        notifications.show({title:"Success",message:"User loggedin successfully"});
       }
       catch(err:any)
@@ -100,15 +95,14 @@ const handleClick=async()=>
       onChange={()=>setAgreeValue(userinfo.email)}
       />
       </div>
-      <Link to={doesExist?"/auth/action":'/login'} 
-      onClick={handleReset}
+      <Link to={"/auth/forgotPassword"} 
       className={style.resetPass} 
       style={{
         fontWeight:'400',
         color:'#00A',
         fontSize:'14px',
         textAlign:'right',
-        display:userinfo.email?'block':'none',
+        display:'block'
         }}
         >
         Reset Password
@@ -119,7 +113,7 @@ const handleClick=async()=>
       onClick={handleClick}
       disabled={!userinfo.email && !userinfo.password}
       >Login</Button>
-      <p style={{letterSpacing:'0.34px',fontSize:'12px'}}>Visiting first time,<Link style={{fontWeight:'bold',color:'#00A',fontSize:'14px'}} to={"/signup"}>Signup Here</Link></p>
+      <p style={{letterSpacing:'0.34px',fontSize:'12px'}}>Visiting first time,<Link style={{fontWeight:'bold',color:'#00A',fontSize:'14px'}} to={"/auth/signup"}>Signup Here</Link></p>
       </div>
     </div>
     </div>  

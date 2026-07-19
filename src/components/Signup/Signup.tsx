@@ -1,25 +1,20 @@
 import React,{useState} from 'react';
+import axios from 'axios';
 import '@mantine/core/styles.css';
 import '@mantine/core/styles/LoadingOverlay.css';
-import { TextInput,Button,Divider,PasswordInput,LoadingOverlay} from '@mantine/core';
-import { createUserWithEmailAndPassword, getAuth,GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
+import { TextInput,Button,PasswordInput,LoadingOverlay} from '@mantine/core';
 import '@mantine/core/styles/global.css';
 import '@mantine/core/styles/UnstyledButton.css';
 import '@mantine/core/styles/Button.css'
 import '@mantine/core/styles/Overlay.css';
 import style from '../Signup/Signup.module.scss';
-import {ReactComponent as Googleicon} from "../../assets/googleicon.svg";
+// import {ReactComponent as Googleicon} from "../../assets/googleicon.svg";
 import '@mantine/core/styles/PasswordInput.css';
 import '@mantine/core/styles/Divider.css'
 import '@mantine/core/styles/Input.css';
 import logo from "../../assets/happy.gif";
-import {auth} from "../../Auth/firebaseAuth";
-import brandLogo from "../../assets/wallet.png";
 import { useNavigate,Link} from 'react-router-dom';
 import { notifications } from '@mantine/notifications';
-import {useDispatch} from "react-redux";
-import { setAuthDetails } from '../../Auth/authSlice';
-import { updateProfile } from 'firebase/auth';
 export const Signup = () => { 
   const[userData,setUser]=useState({
   fullName:'',
@@ -28,23 +23,20 @@ export const Signup = () => {
   });
   const[isLoading,setLoading]=useState<boolean>(false);
   const navigate=useNavigate();
-  const dispatch=useDispatch();
-const handleClick=async(e:any)=>
+const handleClick=async()=>
 { 
   setLoading(true);
   try
-  {
-    const auth=getAuth();
+  { 
     const{email,password,fullName}=userData;
-    const userCred=await createUserWithEmailAndPassword(auth,email,password);
-    const user=userCred.user;
-    updateProfile(userCred.user,{displayName:fullName});
-    user && notifications.show({
+    const userCred=await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/signup`,{useremail:email,userpassword:password,userName:fullName});
+    console.log(userCred);
+    userCred && notifications.show({
       title: 'User created succesfully',
       message: 'You can login now',
       autoClose:2000
     }); 
-    user && navigate("/login");
+    userCred && navigate("/auth/login");
     setLoading(!isLoading);
   }catch(err:any)
   {
@@ -55,35 +47,25 @@ const handleClick=async(e:any)=>
     }); 
     setLoading(false);
   }
-}  
-const handleLogin=async()=>
-{
-  try
-  {
-    let googleProvider=new GoogleAuthProvider();
-    const response=await signInWithPopup(auth,googleProvider);
-    dispatch(setAuthDetails({useremail:response?.user?.email,fullName:response?.user?.displayName,uid:response?.user?.uid,profileImage:response?.user?.photoURL}))
-    navigate("/");
-    notifications.show({
-    title:"Success",
-    message:"Logged in successfully.",  
-  })
-  }catch(err:any)
-  {
-    notifications.show({
-    title: 'Error',
-    message: err.message
-  });
-}
-}
+} 
+// This will return back
+// const handleLogin=useGoogleLogin({ 
+//  onSuccess: async(tokenResponse) =>{
+//    console.log(tokenResponse);
+//    const userInfo:any = await axios.get(
+//       'https://www.googleapis.com/oauth2/v3/userinfo',
+//       { headers: { Authorization: `Bearer ${tokenResponse.access_token}` } },
+//     );
+//     console.log(userInfo);
+//     // const userCred=await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/signup`,{useremail:userInfo.data.email,userpassword:password,userName:fullName});
+//     //  dispatch(setAuthDetails({useremail:userInfo.data.email,fullName:userInfo.data.name,profileImage:userInfo.data.picture,uid:userInfo.data.sub,token:userInfo.data.sub}));
+      
+//      localStorage.setItem("uid",userInfo.data.sub);
+//    navigate(`/user/${localStorage.getItem("uid")}`);
+//  } 
+// });
   return (
     <div className={style['formWrapper']}>
-    <div className={style['brandWrapper']}>
-    <div className={style['brandInfo']}>
-      <img src={brandLogo} alt="not_found" />
-    </div>
-    <h1>Walletier</h1>
-      </div>
      <div className={style['formContainer']}>
      <LoadingOverlay
           visible={isLoading}
@@ -98,7 +80,7 @@ const handleLogin=async()=>
       leftSection={<i className="uil uil-user"></i>}
       withAsterisk
       placeholder="Enter full name"
-      error={userData.fullName==="" && "Enter Full Name"}
+      error={userData.fullName==="" && "Enter full name"}
       value={userData.fullName}
       onChange={(e)=>setUser({...userData,[e.target.name]:e.target.value})}
       name="fullName"
@@ -127,24 +109,26 @@ const handleLogin=async()=>
        <p 
        style={{padding:'0',margin:'0',fontSize:'0.8rem'}}
        >Already a user,
-       <Link to={"/login"} replace style={{fontWeight:'600',fontSize:'1.0rem'}}>Click here</Link>
+       <Link to={"/auth/login"} replace style={{fontWeight:'600',fontSize:'1.0rem'}}>Click here</Link>
        </p>
-      <Divider 
+      {/* <Divider 
       my="md" 
       label="OR" 
       labelPosition="center"
       style={{margin:'0px'}}
-      />
+      /> */}
+      {/* 
+       Google login functionality will be fixed soon
       <Button 
       variant="filled" 
       color="violet" 
       className={style["buttonStyle"]}
       leftSection={<Googleicon />}
       type='button'
-      onClick={handleLogin}
+      onClick={()=>handleLogin()}
       >
       Login
-      </Button>
+      </Button> */}
       </div>
       <div className={style['imgWrapper']}>
       <img src={logo} alt="Not Found" />

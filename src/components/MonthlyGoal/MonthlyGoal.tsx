@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import '@mantine/core/styles/Tooltip.css';
 import React,{useEffect, useState } from "react";
 import axios from "axios";
@@ -6,7 +7,7 @@ import styles from "../MonthlyGoal/monthlyGoal.module.scss";
 import { format,subMonths } from 'date-fns';
 import { MonthPickerInput } from '@mantine/dates';
 import {setMonthlyData } from "./monthlyDataSlice";
-import { Group, Paper, Text, ThemeIcon, SimpleGrid,Tooltip } from '@mantine/core';
+import { Group, Paper, Text, ThemeIcon, SimpleGrid } from '@mantine/core';
 import { useSelector,useDispatch } from "react-redux";
 import {ReactComponent as ArrowRightUp} from "../../assets/arrowRightUp.svg";
 import {ReactComponent as ArrowRightDown} from "../../assets/arrowRightDown.svg";
@@ -35,16 +36,17 @@ const calcDiff=(currMonth:number,lastMonthData:number):number=>
 const handleChange=async(e:any)=>
 {
   const dateString=format(e,"MM/dd/yyyy");
-  const resultData=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${dateString}&uid=${localStorage.getItem("uid")}`);
+  const resultData=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${dateString}&useremail=${localStorage.getItem("useremail")}`);
+  console.log(resultData);
   const lastDateString=subMonths(dateString,1);
   const lastMonthDateString=format(lastDateString,'MM/dd/yyyy');
-  const prevMonthResult=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${lastMonthDateString}&uid=${localStorage.getItem("uid")}`);
-  let expenseVal:number=parseInt(resultData?.data[0]?.totalSum);
-  let incomeVal:number=parseInt(resultData?.data[1]?.totalSum);
+  const prevMonthResult=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${lastMonthDateString}&useremail=${localStorage.getItem("useremail")}`);
+  let expenseVal:number=parseInt(resultData?.data.Expense);
+  let incomeVal:number=parseInt(resultData?.data.Income);
   let currSavings:number=incomeVal-expenseVal;
   currSavings<0 && (currSavings=0)
-  let prevMonthExpense=calcDiff(parseInt(resultData?.data[0]?.totalSum),parseInt(prevMonthResult?.data[0]?.totalSum));
-  let prevMonthIncome=calcDiff(parseInt(resultData?.data[1]?.totalSum),parseInt(prevMonthResult?.data[1]?.totalSum));
+  let prevMonthExpense=calcDiff(parseInt(resultData?.data.Expense),parseInt(prevMonthResult?.data.Expense));
+  let prevMonthIncome=calcDiff(parseInt(resultData?.data.Income),parseInt(prevMonthResult?.data.Income));
   let prevMonthSavingNumber:number=prevMonthIncome-prevMonthExpense;
   prevMonthSavingNumber<0 &&(prevMonthSavingNumber=0)
   let prevMonthSavingComp=calcDiff(currSavings,prevMonthSavingNumber);
@@ -61,18 +63,16 @@ useEffect(()=>
 {
 const call=async()=>
 {
-  let dateString=format(new Date(),"MM/dd/yyyy");
-  const data:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${dateString}&uid=${localStorage.getItem("uid")}`);
-  console.log(data);
+  const dateString=format(new Date(),"MM/dd/yyyy");
+  const currMonthData:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${dateString}&useremail=${localStorage.getItem("useremail")}`);
   const prevMonthDateString=format(subMonths(dateString,1),"MM/dd/yyyy");
-  const prevMonthData=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${prevMonthDateString}&uid=${localStorage.getItem("uid")}`);
-  let savingVal:number=parseInt(data?.data[1]?.totalSum)-parseInt(data?.data[0]?.totalSum);
-  const incomeVal:number=parseInt(data?.data[1]?.totalSum);
-  console.log(incomeVal);
-  const expenseVal:number=parseInt(data?.data[0]?.totalSum);
-  const incomeComp=calcDiff(parseInt(data?.data[1]?.totalSum),parseInt(prevMonthData?.data[1]?.totalSum));
-  const expenseComp=calcDiff(parseInt(data?.data[0]?.totalSum),parseInt(prevMonthData?.data[0]?.totalSum));
-  const prevSavingVal:number=parseInt(prevMonthData?.data[1]?.totalSum)-parseInt(prevMonthData?.data[0]?.totalSum);
+  const prevMonthData=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${prevMonthDateString}&useremail=${localStorage.getItem("useremail")}`);
+  const savingVal:number=parseInt(currMonthData?.data?.Income)-parseInt(currMonthData?.data.Expense);
+  const incomeVal:number=parseInt(currMonthData?.data?.Income);
+  const expenseVal:number=parseInt(currMonthData?.data.Expense);
+  const incomeComp=calcDiff(parseInt(currMonthData?.data.Income),parseInt(prevMonthData?.data.Income));
+  const expenseComp=calcDiff(parseInt(currMonthData?.data.Expense),parseInt(prevMonthData?.data.Expense));
+  const prevSavingVal:number=parseInt(prevMonthData?.data.Income)-parseInt(prevMonthData?.data.Expense);
   const savingValComp:number=calcDiff(savingVal,prevSavingVal);
   dispatch(setMonthlyData({ 
     expense:expenseVal,
@@ -83,8 +83,7 @@ const call=async()=>
     prevMonthSaving:parseInt(savingValComp.toFixed(2))}));
   }    
 call();
-// eslint-disable-next-line react-hooks/exhaustive-deps
-},[]);
+},[dispatch]);
   const stats = data.map((stat) => {
     const DiffIcon = stat.diff > 0 ?ArrowRightUp:ArrowRightDown;
     return (
@@ -123,11 +122,8 @@ call();
   return (
    <>
     <div className={styles['subHeading']}>
-    <div style={{fontWeight:'700',fontSize:'1.5rem',margin:'0',letterSpacing:'1px'}}>
+    <div style={{fontWeight:'600',fontSize:'1.2rem',margin:'0',letterSpacing:'0.2px'}}>
      Monthly Stats 
-     <Tooltip label="Monthly Finance Summary">
-     <i className="uil uil-info-circle" style={{fontSize:'24px',color:'#fff',marginLeft:'4px',cursor:'pointer'}}></i>
-     </Tooltip>
     </div>
   <MonthPickerInput
      placeholder="Pick Month"

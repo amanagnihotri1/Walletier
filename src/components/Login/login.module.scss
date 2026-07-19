@@ -1,3 +1,7 @@
+.mantine-TextInput-label
+{
+  align-items: left;
+}
 .extraButtons
 {
   display: flex;
@@ -20,22 +24,25 @@
 background: -webkit-linear-gradient(to right, #292E49, #536976);  /* Chrome 10-25, Safari 5.1-6 */
 background: linear-gradient(to right, #292E49, #536976); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
  text-align: center;
- -webkit-background-clip: text;
  -webkit-text-fill-color: transparent;
 }
 :global(.mantine-Input-input)
 {
+  &::placeholder{
+    text-align:left;
+  }
   &:focus
   {
     border: 2px solid magenta;
-  }
-}
+  } 
 :global(.mantine-PasswordInput-innerInput)
 {
   border-radius:3px;
+  text-align:left;
   &:focus{
     border: 1.3px solid magenta !important;
   }
+}
 }
 .loginbackground
 {
@@ -95,12 +102,13 @@ img
 {
     height: 100%;
     width: 30vw;
+    text-align: left;
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
     margin-top:10px;
     gap: 10px;
- .logButton
+.logButton
  {
     background-color: magenta;
     color: #fff;

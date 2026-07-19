@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 .root {
-  padding: calc(var(--mantine-spacing-xl) * 1.5);
+  font-family: "Montserrat", sans-serif;
+  font-family:700;
 }
 :global(.mantine-InputWrapper-root)
 {
@@ -12,14 +14,14 @@
   }
   .value {
     font-size: 24px;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1;
   }
   
   .diff {
     line-height: 1;
     display: flex;
-    align-items: center;
+    align-items: left; 
   }
   
   .icon {

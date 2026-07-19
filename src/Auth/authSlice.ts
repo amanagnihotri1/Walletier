@@ -1,20 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface authDetails
 {
-  fullName?:string | null;
-  useremail?:string | null;
-  profileImage?:string | null;
-  error?:string;
-  uid?:string;
-  monthlyGoal?:number;
+  fullName?:     string | null;
+  useremail?:    string | null;
+  profileImage?: string | null;
+  uid?:          string | null;
+  token?:        string | null;
+  monthlyGoal?:  number | null;
+  error?:        string;
 };
 export const initialState:authDetails=
 {
-fullName:null || localStorage.getItem("user"),
-useremail:'',
-profileImage:null,
-error:'',
-uid:'',
+fullName:" " || localStorage.getItem("fullName"),
+useremail:" ",
+profileImage:" " || localStorage.getItem("profileImage"),
+error:" ",
+uid:localStorage.getItem("uid"),
+token:localStorage.getItem("tknum"),
+monthlyGoal: null,
 };
 export const authSlice=createSlice({
     name:'userinfo',
@@ -26,9 +29,11 @@ export const authSlice=createSlice({
      state.fullName=action.payload.fullName;
      state.useremail=action.payload.useremail;
      state.error=action.payload.error;
-     state.uid=action.payload.uid;
      state.profileImage=action.payload.profileImage || 'https://marketplace.canva.com/EAFXS8-cvyQ/1/0/800w/canva-brown-and-light-brown%2C-circle-framed-instagram-profile-picture-pHw7WC6fd-0.jpg';
-   },
+    state.token=action.payload.token || "";
+    state.uid=action.payload.uid || "";
+    state.monthlyGoal=action.payload.monthlyGoal || 0;
+    },
    clearAuthDetails:(state)=>
    {
     state.fullName="";
@@ -36,6 +41,8 @@ export const authSlice=createSlice({
     state.error="";
     state.uid="";
     state.profileImage="";
+    state.token="";
+    state.monthlyGoal=0;
     },
   setError:(state,action:PayloadAction<string>)=>
   {

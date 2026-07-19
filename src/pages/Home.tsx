@@ -1,4 +1,4 @@
-import React,{ useEffect} from 'react';
+import React from 'react';
 import '@mantine/core/styles/global.css';
 import '@mantine/core/styles/Button.css';
 import '@mantine/core/styles/UnstyledButton.css';
@@ -8,27 +8,11 @@ import '@mantine/dates/styles.css';
 import '@mantine/core/styles/Text.css';
 import { Navbar } from '../components/Navbar/Navbar';
 import MonthlyGoal from '../components/MonthlyGoal/MonthlyGoal';
-import { useSelector,useDispatch } from 'react-redux';
-import { onAuthStateChanged } from 'firebase/auth';
-import { getAuth } from 'firebase/auth';
-import { clearAuthDetails, setAuthDetails} from '../Auth/authSlice';
+import { useSelector} from 'react-redux';
 import { Transactions } from '../components/Transactions/Transactions';
 import Cardgroup  from '../components/cardGroup/Cardgroup';
 export const Home = () => {
-const dispatch=useDispatch();
- useEffect(()=>
- {
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if(user) 
-    dispatch(setAuthDetails({useremail:user?.email,fullName:user?.displayName,uid:user?.uid,profileImage:user?.photoURL}));
-    else{
-      dispatch(clearAuthDetails());
-    }
-  });
- // eslint-disable-next-line react-hooks/exhaustive-deps
- },[]);
-  const authid:any=useSelector((state:any)=>state.authReducer.authuid);
+const authid:any=useSelector((state:any)=>state.authReducer.authuid);
   return (
     <div className={style["mainWrapper"]}>
     <Navbar />
@@ -40,7 +24,7 @@ const dispatch=useDispatch();
     <Cardgroup />
     </div> 
      <div className={style['rightWrap']}>
-     <Transactions/> 
+     <Transactions/>
     </div>
     </div>
     <div className={style['bottomText']}>Made With ❣ by Aman Agnihotri</div>

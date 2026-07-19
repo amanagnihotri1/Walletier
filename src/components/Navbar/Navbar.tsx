@@ -1,4 +1,3 @@
-import React from 'react';
 import {Button} from '@mantine/core';
 import '@mantine/core/styles/global.css';
 import '@mantine/core/styles.css';
@@ -8,25 +7,25 @@ import '@mantine/core/styles/ActionIcon.css'
 import '@mantine/core/styles/NavLink.css';
 import style from "../../components/Navbar/navbar.module.scss";
 import { useNavigate } from 'react-router-dom';
-import { getAuth } from 'firebase/auth';
-import { clearAuthDetails } from '../../Auth/authSlice';
+import axios from 'axios';
 import brandLogo from "../../assets/wallet.png";
-import {useDispatch, useSelector } from 'react-redux';
-import { clearData } from '../cardGroup/cardSlice';
+import userlogo from "../../assets/user_image.png";
+import {useDispatch } from 'react-redux';
+import { clearAuthDetails } from '../../Auth/authSlice';
 export const Navbar = () => {
-const dispatch=useDispatch();
 const navigate=useNavigate();
+const dispatch=useDispatch();
 const HandleLogout=async()=>
   {
-    let authUser=getAuth();
-    await authUser.signOut();
+    console.log("logout called",process.env.REACT_APP_BASEURL);
+    const data=await axios.get(`${process.env.REACT_APP_BASE_URL}/auth/logout`);
+    console.log(data);
+    navigate("/auth/login");
     dispatch(clearAuthDetails());
-    dispatch(clearData());
-    navigate("/login");
-  
+    localStorage.clear();
   } 
-  const userName=useSelector((state:any)=>state.authReducer.fullName);
-  const userprofile=useSelector((state:any)=>state.authReducer.profileImage);
+  const userName= localStorage.getItem("fullName");
+  const userprofile=userlogo || localStorage.getItem("profileImage");
   return (
       <div className={style["menuList"]}>
         <div className={style['linkWrapper']}>
@@ -42,11 +41,11 @@ const HandleLogout=async()=>
      <div className={style["roundedButton"]}>
       {userName && <div className={style["group"]}>
       <div className={style["usericon"]}>
-    <img src={userprofile} alt="not_found" />
+    <img src={userprofile || " "} alt="not_found" />
     </div>
     <h3>{userName}</h3>
     </div>}
-    <Button variant="filled" color={"#ffffff"} style={{width:'100%'}} onClick={HandleLogout}>Logout</Button>
+    <Button variant="filled" color="violet" style={{width:'100%',borderRadius:'24px'}} onClick={HandleLogout}>Logout</Button>
     </div>
      </div> 
   )

@@ -48,7 +48,7 @@
   margin: 20px 10px;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items:center;
   font-weight: 700;
   gap: 10px;
   .logoimgWrapper
@@ -59,8 +59,9 @@
   }
   h4
 {
-  margin-top: 25px;
+  margin-top: 5px;
   flex-basis: 2/3;
+  color:rgb(255, 255, 255);
 }  
 img
 {
@@ -76,13 +77,15 @@ img
 .roundedButton
 {
   width: auto;
-  height: 60px;
+  height: 50px;
   display: flex;
   font-size: 12px;
   justify-content:space-between;
-  padding: 10px 20px;
+  padding: 10px 12px;
+  background-color: #fff;
   align-items: center;
   gap: 20px;
+  border-radius: 28px;
   bottom: 0px;
   .group
   {
@@ -93,12 +96,12 @@ img
   }
   h3
  {
-  color: #FFF;
+  color: rgb(158, 60, 255);
   font-weight: 500;
  } 
 :global(.mantine-Button-label)
 {
-  color: #000;
+  color: #fff;
 } 
 }
 .usericon

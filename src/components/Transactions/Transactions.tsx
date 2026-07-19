@@ -4,7 +4,7 @@ import '@mantine/core/styles/Button.css';
 import '@mantine/core/styles/Modal.css';
 import '@mantine/core/styles/ModalBase.css';
 import '@mantine/core/styles/Table.css';
-import React,{useState,useEffect} from 'react';
+import {useState,useEffect} from 'react';
 import { DatePickerInput } from '@mantine/dates';
 import axios from "axios";
 import dayjs from "dayjs";
@@ -22,7 +22,7 @@ import { TableData } from '../../app/TypeInterfaces';
 export const Transactions = () => {
   const dispatch=useDispatch();
   const tableVal:TableData[]=useSelector((state:any)=>state.transReducer.expenseList);
-  const authuid=useSelector((state:any)=>state.authReducer.uid);
+  const useremail:String=useSelector((state:any)=>state.authReducer.useremail);
   const[type,setType]=useState<string>("");
   const[editAmount,setEditAmount]=useState(0);
   const[amount,setAmount]=useState<number>(0);
@@ -41,24 +41,27 @@ export const Transactions = () => {
  { 
    try
    {     
-    if(!amount && !category)
+    if(!amount && !category && !useremail)
     {
-      notifications.show({title:"Error",message:"Missing field,amount or category"});
+      notifications.show({title:"Error",message:"Enter all mandatory fields"});
     return new Error(`Error filed missing`);
     } 
       e.preventDefault();
+      console.log(useremail);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const res:any=await axios.post(`${process.env.REACT_APP_BASE_URL}/addentry`,{
-      userId:authuid,
+      useremail:localStorage.getItem("useremail"),
       amount,
       category,
       entryType:type,
       date:dayjs(datevalue?.toISOString())
       });
       close();
+      console.log(res);
       const resu=await getData("1D");
+      console.log(resu);
       dispatch(setTableData(resu));
-      const result:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/getdailydata?uid=${localStorage.getItem("uid")}`);
+      const result:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/getdailydata?useremail=${localStorage.getItem('useremail')}`);
       category==="Income"?dispatch(setIncome(result?.data[1]?.totalSum)):dispatch(setExpense(result?.data[0]?.totalSum))
       notifications.show({title:"Success",message:"Entry created successfully",autoClose:2000}); 
     }catch(err:any)
@@ -89,27 +92,32 @@ export const Transactions = () => {
    console.log(data);
    const result=await getData("1D"); 
     dispatch(setTableData(result));
- } 
+ }
  const getData=async(timeVal:string)=>
-{  
+{
+  console.log(timeVal); 
+  console.log(localStorage);  
  if(timeVal==="1D")
  {
-  let queryData=await axios.get(`${process.env.REACT_APP_BASE_URL}/currdayentries?userid=${localStorage.getItem('uid')}`);
+  const queryData=await axios.get(`${process.env.REACT_APP_BASE_URL}/currdayentries?useremail=${localStorage.getItem('useremail')}`);
   dispatch(setTableData(queryData?.data));
   return queryData.data;
  } 
- else if(timeVal==="1M")
+ if(timeVal==="1M")
   { 
     let prevMonth=sub(new Date(),{months:1}).toString();
+    console.log(prevMonth);
     let dateString=format(prevMonth,'MM/dd/yyyy');
-    let querData:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/lastMonthData?dateVal=${dateString}&uid=${localStorage.getItem('uid')}`);
+    console.log(dateString);
+    let querData:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/lastMonthData?dateVal=${dateString}&uid=${localStorage.getItem('useremail')}`);
     dispatch(setTableData(querData?.data));
     return querData.data;
   } 
-else if(timeVal==="1Y")
+if(timeVal==="1Y")
 {
-  let res:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/lastYearData?userid=${localStorage.getItem("uid")}`);
+  let res:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/lastYearData?useremail=${localStorage.getItem("useremail")}`);
   dispatch(setTableData(res?.data));
+  console.log(res);
   return res.data;
 }
 }
@@ -120,6 +128,7 @@ const handleEditSlider=(e:any)=>{
 const handleChange=async(e:any)=>
 {
   const response:any=await getData(e);
+  console.log(response);
   dispatch(setTableData(response));
 }
 useEffect(()=>
@@ -129,7 +138,7 @@ useEffect(()=>
    dispatch(setTableData(result));
   };
  call();
-},[]);
+},[dispatch]);
   return (
     <div className={style["tableWrapper"]}>
       <div className={style['tableName']}>
@@ -140,7 +149,7 @@ useEffect(()=>
        <Button leftSection={<img src={addImage} alt='Not Found' width={"10px"} height={"10px"}/>} onClick={open} variant="default">
         Add
       </Button>
-      <SegmentedControl color="magenta" data={["1D", '1M', '1Y']} onChange={handleChange} />
+      <SegmentedControl color="magenta" data={["1D", "1M", "1Y"]} onChange={handleChange} />
       </div>
       </div>
       <Table.ScrollContainer minWidth={500}>

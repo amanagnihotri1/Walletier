@@ -1,8 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React,{useState,useEffect} from 'react'
+import { useDispatch } from 'react-redux';
 import { PieChart,Pie,Cell,Tooltip,Legend, ResponsiveContainer } from 'recharts';
 import axios from 'axios';
 export const Expensegraph = () => {
 const[expenseData,setExpenseData]=useState();
+const dispatch=useDispatch();
 const[bills,setBills]=useState<number>();
 const[travel,setTravel]=useState<number>();
 const[food,setFood]=useState<number>();
@@ -12,29 +15,24 @@ const[daily_needs,setDailyNeeds]=useState<number>();
 const[entertainment,setEntertainment]=useState<number>();
 const getExpenseData=async()=>
 {  
-    let res=await axios.get(`${process.env.REACT_APP_BASE_URL}/getGraphData?uid=${localStorage.getItem('uid')}`);
+    const res=await axios.get(`${process.env.REACT_APP_BASE_URL}/getGraphData?useremail=${localStorage.getItem('useremail')}`);
     setExpenseData(res?.data);
+    console.log(res.data);
     return res.data;
 }
-const getBillsData=async(categ:string)=>
+const getBillsData=async()=>
 {
-    let billsData:number=0;
     const data:any=await getExpenseData();
     setExpenseData(data);
-    Array.isArray(data) && data.forEach((item:any)=>{
-      if(item.category===categ)
-        {
-         billsData+=parseInt(item.amount);
-         if(categ==="Bills")setBills(billsData);
-         if(categ==="Shopping")setShopping(billsData);
-         if(categ==="Travel")setTravel(billsData);
-         if(categ==="Food")setFood(billsData);
-         if(categ==="Entertainment")setEntertainment(billsData);
-         if(categ==="Others")setOtherData(billsData);
-         if(categ==="Daily Needs")setDailyNeeds(billsData);
-        }
+    Array.isArray(data) && data?.forEach((item:any)=>{
+         if(item._id==="Bills")setBills(item.totalSum);
+         if(item._id==="Shopping")setShopping(item.totalSum);
+         if(item._id==="Travel")setTravel(item.totalSum);
+         if(item._id==="Food")setFood(item.totalSum);
+         if(item._id==="Entertainment")setEntertainment(item.totalSum);
+         if(item._id==="others")setOtherData(item.totalSum);
+         if(item._id==="Daily Needs")setDailyNeeds(item.totalSum);
     })
-return billsData;
 }
 const data02 = [
         {
@@ -77,16 +75,9 @@ useEffect(()=>
 {
 (async()=>
 {
-  await getBillsData("Bills");
-  await getBillsData("Shopping");
-  await getBillsData("Travel");
-  await getBillsData("Food");
-  await getBillsData("Others");
-  await getBillsData("Daily Needs");
-  await getBillsData("Entertainment");
+  getBillsData();
 })();
-// eslint-disable-next-line react-hooks/exhaustive-deps
-},[]);
+},[dispatch]);
 return (
   <>
  {expenseData?(<ResponsiveContainer width="100%" height="100%">
@@ -97,9 +88,10 @@ return (
     }
     </Pie>
     <Legend/>
-    <Tooltip separator='='/>
+    <Tooltip separator=':'/>
     </PieChart>  
-    </ResponsiveContainer>):<h1 style={{textAlign:'center',marginTop:'60px'}}>No Data available</h1>}
+    </ResponsiveContainer>
+    ):<h1 style={{textAlign:'center',marginTop:'60px'}}>No Data available</h1>}
     </>
   )
 }

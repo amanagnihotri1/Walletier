@@ -1,0 +1,23 @@
+.errorimage{
+    text-align: center;
+    height: 340px;
+    width: fit-content;
+    align-self: center;
+}
+.buttonStyle{
+ border: 1.4px solid #2437b0;
+ text-align: center;
+ padding: 6px 20px;
+ color: #2437b0;
+ text-decoration: none;  
+ align-self: center; 
+ border-radius: 4px;
+ animation-fill-mode: forwards;
+ animation-timing-function: ease-in-out;
+ animation-direction: reverse;
+ animation-duration: 0.2s;
+ &:hover{
+ color: #fff;
+ background-color: #2437b0;
+}
+}

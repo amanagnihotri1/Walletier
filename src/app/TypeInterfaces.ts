@@ -7,23 +7,10 @@ export interface UserData
 export interface TableData
 {
     _id:string;
-    category?:string;
-    amount?:number;
+    category:string;
+    userId:string;
+    amount:number;
     date:Date;
-    entryType?:string;
+    entryType:string;
 
-}
-export interface newsData
-{
-    source:{
-        id:string;
-        name:string;
-    },
-    author:string;
-    title:string;
-    description:string;
-    url:string;
-    urlToImage:string;
-    publishedAt:string;
-    content:string;
 }

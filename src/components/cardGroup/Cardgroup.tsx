@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-useless-concat */
 import style from "../cardGroup/cardgroup.module.scss";
 import '@mantine/core/styles/Badge.css';
 import '@mantine/core/styles/Tooltip.css';
-import React,{useState} from "react";
+import React from "react";
 import CountUp from 'react-countup';
 import axios from "axios";
 import coinImage from "../../assets/coin.png";
@@ -13,19 +15,17 @@ import { Sparkline } from '@mantine/charts';
 import { Expensegraph } from '../ExpenseGraph/Expensegraph';
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setIncome,setExpense} from "./cardSlice";
+import {setIncome,setExpense} from "./cardSlice";
 const Cardgroup = () => {
   const dispatch=useDispatch();
   const expenseValue=useSelector((state:any)=>state.cardSlice.expenses);
   const incomeValue=useSelector((state:any)=>state.cardSlice.income);
-  const [expenseGraphData,setExpenseGraph]=useState([]);
-  const[incomeGraphData,setIncoomeGraph]=useState([]);
   const getCardData=async()=>
   {
-    const data:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/getdailydata?uid=${localStorage.getItem("uid")}`);
-    const graphdata:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/getGraphData?uid=${localStorage.getItem("uid")}`); 
-    dispatch(setIncome(data?.data[1]?.totalSum));
-    dispatch(setExpense(data?.data[0]?.totalSum))
+    const data:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/getdailydata?useremail=${localStorage.getItem('useremail')}`);
+    console.log(data);
+    dispatch(setExpense(data.data.Expense));
+    dispatch(setIncome(data.data.Income));
   }
 
   useEffect(()=>
@@ -34,13 +34,10 @@ const Cardgroup = () => {
      await getCardData();
     }
     call();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  },[dispatch]);
   return (
     <div className={style["cardWrapper"]}>
     <div className={style['incomeTile']}>
-    <div className={style['expandimg']}>
-    </div>
     <div className={style['tileIcon']}><img src={coinImage} alt="not_found" />
     </div>  
      <div className={style['saveinfo']}>
