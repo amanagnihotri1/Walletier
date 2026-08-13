@@ -1,5 +1,5 @@
 import React from 'react';
-import { Main } from '../components/landingPage/Main';
+import Main from '../components/landingPage/Main';
 export const Welcome = () => {
   return (
     <>

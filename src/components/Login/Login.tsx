@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
 import '@mantine/core/styles/Notification.css';
 import axios from 'axios';
 import React,{useState} from 'react';
@@ -27,10 +26,9 @@ export const Login= () => {
 const handleClick=async()=>
 {   
   try
-  {    
+  {   
        const{email,password}=userinfo;
        const usermain:any=await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/login`,{userEmail:email,userPass:password},{withCredentials:true});
-       console.log(usermain.data.userDetails.email);
        localStorage.setItem("tknum",usermain.data.token);
        localStorage.setItem("uid",usermain.data.userDetails._id);
        localStorage.setItem("useremail",usermain.data.userDetails.email);
@@ -42,7 +40,6 @@ const handleClick=async()=>
          monthlyGoal: usermain.data.userDetails.monthlyGoal,
          error: ''
        }));
-       console.log(useremail);
        usermain.data.userDetails && navigate(`/user/${localStorage.getItem("uid")}`);
        notifications.show({title:"Success",message:"User loggedin successfully"});
       }
@@ -95,7 +92,7 @@ const handleClick=async()=>
       onChange={()=>setAgreeValue(userinfo.email)}
       />
       </div>
-      <Link to={"/auth/forgotPassword"} 
+      <Link to={"/auth/forgetPassword"} 
       className={style.resetPass} 
       style={{
         fontWeight:'400',

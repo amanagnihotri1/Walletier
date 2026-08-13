@@ -100,6 +100,7 @@ export const Transactions = () => {
  if(timeVal==="1D")
  {
   const queryData=await axios.get(`${process.env.REACT_APP_BASE_URL}/currdayentries?useremail=${localStorage.getItem('useremail')}`);
+  console.log(queryData);
   dispatch(setTableData(queryData?.data));
   return queryData.data;
  } 

@@ -20,7 +20,7 @@ const HandleLogout=async()=>
     console.log("logout called",process.env.REACT_APP_BASEURL);
     const data=await axios.get(`${process.env.REACT_APP_BASE_URL}/auth/logout`);
     console.log(data);
-    navigate("/auth/login");
+    navigate("/welcome");
     dispatch(clearAuthDetails());
     localStorage.clear();
   } 

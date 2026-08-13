@@ -1,8 +1,7 @@
-import "@mantine/core/styles/global.css";
 import React from 'react';
+import "@mantine/core/styles/global.css";
 import './App.css';
 import '@mantine/charts/styles.css';
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Login } from './components/Login/Login';
 import { Home } from './pages/Home';
 import { store } from './app/store';
@@ -12,7 +11,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import {Provider} from 'react-redux';
-import {Forgetpassword} from './components/forgetPassword/Forgetpassword';
+import {ForgetPassword} from './components/forgetPassword/ForgetPassword';
 import { Signup } from './components/Signup/Signup';
 import { ErrorComponent } from "./components/Errorcomponent/ErrorComponent";
 import { Welcome } from "./pages/Welcome";
@@ -29,7 +28,7 @@ function App()
   },
   {
    path:"/auth/forgetPassword",
-   element:<Forgetpassword/>,
+   element:<ForgetPassword/>,
   },
   {
     path:'/user/:uid',
@@ -50,9 +49,7 @@ function App()
   ]);
   return (
     <Provider store={store}>
-      <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID ?? ""}>
-    <RouterProvider router={router}/> 
-    </GoogleOAuthProvider>
+    <RouterProvider router={router}/>     
     </Provider>
   );
 }

@@ -55,7 +55,7 @@
   flex-wrap: wrap;
   width: 100%;
 
-  .leftWrap
+.leftWrap
 {   flex: 1 0 120px;
     width: 100%;
     gap: 20px;
@@ -74,7 +74,7 @@
     height: auto; 
     padding: 0px 0px; 
     overflow:auto; 
-    width:50%;
+    min-width: 50vw;
 }
 .userBanner
 {
@@ -119,4 +119,12 @@ p
     font-style: normal;
     color: #555151;
 }
+}
+@media only screen and (max-width: 600px) {
+.rightWrap {
+        height: auto; 
+        padding: 0px 0px;
+        overflow: auto;
+        width: 100vw !important;
+    }
 }

@@ -1,3 +1,6 @@
+*{
+box-sizing: border-box;
+}
 :global(.mantine-Table-tbody)
 {
     background-color: #FFF;
@@ -89,4 +92,30 @@ form
 {
     margin: 20px 0px;
 }    
+}
+@media only screen and (max-width: 600px) {
+    .tableName {
+        width: 100%;
+        height: auto;
+        display: flex;
+        padding: 4px 10px;
+        border-radius: 6px;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 20;
+        border: 2px solid #dee2e6;
+        transition: 0.2s;
+
+        .textInner {
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 0;
+        }
+
+        .buttonGroup {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+    }
 }
