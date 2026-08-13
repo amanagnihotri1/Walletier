@@ -11,7 +11,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import {Provider} from 'react-redux';
-import {ForgetPassword} from './components/forgetPassword/ForgetPassword';
+import {ForgetPassword} from "../src/components/forgetPassword/ForgetPassword";
 import { Signup } from './components/Signup/Signup';
 import { ErrorComponent } from "./components/Errorcomponent/ErrorComponent";
 import { Welcome } from "./pages/Welcome";
