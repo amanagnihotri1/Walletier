@@ -16,7 +16,7 @@
 
 ## Description
 
-This is a personal expense tracker app built using ReactJS, Redux for state management, and Firestore as the database. It helps users manage and track their expenses efficiently.
+This is a personal expense tracker app built using ReactJS, Redux for state management,MongoDB and ExpressJS API. It helps users manage and track their expenses,savings and income efficiently.
 
 ## Features
 
