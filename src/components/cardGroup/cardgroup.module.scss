@@ -14,6 +14,7 @@
     { 
         width: 360px;
         height: 250px;
+        align-items: center;
         background: radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%);
     .piggyBank
     {
@@ -31,23 +32,29 @@
     }    
     }
     }
-    .analysisTile
-    {
-        :global(.recharts-wrapper)
-        {
-            width: 100% !important;
-            display: flex;
-            align-items: center;
-            height: 100%;
-            position: unset !important;
-        }
-        :global(.recharts-legend-wrapper)
-        {
-          display: inline;
-          font-size: 10px;
-          position: unset !important;
-        }
+    .analysisText{
+      display: flex;
+      flex-direction: row;
+      justify-content: left;
+      align-items:center;
     }
+        .analysisTile
+        {
+            :global(.recharts-wrapper)
+            {
+                width: 100% !important;
+                display: flex;
+                align-items: center;
+                height: 100%;
+                position: unset !important;
+            }
+            :global(.recharts-legend-wrapper)
+            {
+                display: inline;
+                font-size: 10px;
+                position: unset !important;
+            }
+        }
 
     .incomeTile
     {
@@ -71,6 +78,7 @@
         {
             display: flex;
             gap: 10px;
+            align-items: center;
             text-align: left;    
         }
     .tileIcon
@@ -153,8 +161,7 @@ img
 }
 :global(.mantine-Badge-root)
 {
-    height: 20%;
-    width: 120px;
+    width: auto;
     background-color: violet;
 }
 :global(.mantine-Badge-label)

@@ -1,141 +1,176 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import '@mantine/core/styles/Tooltip.css';
-import React,{useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import CountUp from 'react-countup';
 import styles from "../MonthlyGoal/monthlyGoal.module.scss";
-import { format,subMonths } from 'date-fns';
+import { format, subMonths } from 'date-fns';
 import { MonthPickerInput } from '@mantine/dates';
-import {setMonthlyData } from "./monthlyDataSlice";
+import { setMonthlyData } from "./monthlyDataSlice";
 import { Group, Paper, Text, ThemeIcon, SimpleGrid } from '@mantine/core';
-import { useSelector,useDispatch } from "react-redux";
-import {ReactComponent as ArrowRightUp} from "../../assets/arrowRightUp.svg";
-import {ReactComponent as ArrowRightDown} from "../../assets/arrowRightDown.svg";
-const MonthlyGoal=({uid}:{uid:String})=>{
-  const dispatch=useDispatch();
+import { useSelector, useDispatch } from "react-redux";
+import { ReactComponent as ArrowRightUp } from "../../assets/arrowRightUp.svg";
+import { ReactComponent as ArrowRightDown } from "../../assets/arrowRightDown.svg";
+import apiCall from '../../utils/apiService';
+import { MonthData } from '../../app/TypeInterfaces';
+
+const MonthlyGoal = ({ uid }: { uid: String }) => {
+  const dispatch = useDispatch();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const[dateVal,setDateVal]=useState<Date | null | undefined>();
-const incomeVal=useSelector((state:any)=>state.monthlyDataReducer.income);
-const expenseVal=useSelector((state:any)=>state.monthlyDataReducer.expense);
-const savingsVal=useSelector((state:any)=>state.monthlyDataReducer.moneySaved);
-const incomComp=useSelector((state:any)=>state.monthlyDataReducer.prevMonthIncomeComp);
-const expenseComp=useSelector((state:any)=>state.monthlyDataReducer.prevMonthExpenseComp);
-const savingComp=useSelector((state:any)=>state.monthlyDataReducer.prevMonthSavingComp);
-const data = [
-  { title: 'Income', value: incomeVal, diff:incomComp,icon:incomComp>0?'up':'down' },
-  { title: 'Expense', value:expenseVal, diff: expenseComp,icon:expenseComp>0?'up':'down' },
-  { title: 'Savings', value: savingsVal, diff: savingComp,icon:savingComp>0?'up':'down'},
-];
-const calcDiff=(currMonth:number,lastMonthData:number):number=>
-{
-  let newVal:number=currMonth-lastMonthData;
-  let dataValue:number=parseInt(((newVal/lastMonthData)*100).toFixed(2));
-  dataValue<0 && (dataValue=0)
-  return dataValue;
-}
-const handleChange=async(e:any)=>
-{
-  const dateString=format(e,"MM/dd/yyyy");
-  const resultData=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${dateString}&useremail=${localStorage.getItem("useremail")}`);
-  console.log(resultData);
-  const lastDateString=subMonths(dateString,1);
-  const lastMonthDateString=format(lastDateString,'MM/dd/yyyy');
-  const prevMonthResult=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${lastMonthDateString}&useremail=${localStorage.getItem("useremail")}`);
-  let expenseVal:number=parseInt(resultData?.data.Expense);
-  let incomeVal:number=parseInt(resultData?.data.Income);
-  let currSavings:number=incomeVal-expenseVal;
-  currSavings<0 && (currSavings=0)
-  let prevMonthExpense=calcDiff(parseInt(resultData?.data.Expense),parseInt(prevMonthResult?.data.Expense));
-  let prevMonthIncome=calcDiff(parseInt(resultData?.data.Income),parseInt(prevMonthResult?.data.Income));
-  let prevMonthSavingNumber:number=prevMonthIncome-prevMonthExpense;
-  prevMonthSavingNumber<0 &&(prevMonthSavingNumber=0)
-  let prevMonthSavingComp=calcDiff(currSavings,prevMonthSavingNumber);
-  dispatch(setMonthlyData({
-    expense:expenseVal,
-    income:incomeVal,
-    savingVal:currSavings,
-    prevMonthExpense:Number(prevMonthExpense.toFixed(2)),
-    prevMonthIncome:Number(prevMonthIncome.toFixed(2)),
-    prevMonthSaving:Number(prevMonthSavingComp.toFixed(2)),
-  }));
-}
-useEffect(()=>
-{
-const call=async()=>
-{
-  const dateString=format(new Date(),"MM/dd/yyyy");
-  const currMonthData:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${dateString}&useremail=${localStorage.getItem("useremail")}`);
-  const prevMonthDateString=format(subMonths(dateString,1),"MM/dd/yyyy");
-  const prevMonthData=await axios.get(`${process.env.REACT_APP_BASE_URL}/particularMonthData?dateVal=${prevMonthDateString}&useremail=${localStorage.getItem("useremail")}`);
-  const savingVal:number=parseInt(currMonthData?.data?.Income)-parseInt(currMonthData?.data.Expense);
-  const incomeVal:number=parseInt(currMonthData?.data?.Income);
-  const expenseVal:number=parseInt(currMonthData?.data.Expense);
-  const incomeComp=calcDiff(parseInt(currMonthData?.data.Income),parseInt(prevMonthData?.data.Income));
-  const expenseComp=calcDiff(parseInt(currMonthData?.data.Expense),parseInt(prevMonthData?.data.Expense));
-  const prevSavingVal:number=parseInt(prevMonthData?.data.Income)-parseInt(prevMonthData?.data.Expense);
-  const savingValComp:number=calcDiff(savingVal,prevSavingVal);
-  dispatch(setMonthlyData({ 
-    expense:expenseVal,
-    income:incomeVal,
-    savingVal,
-    prevMonthExpense:parseInt(expenseComp.toFixed(2)),
-    prevMonthIncome:parseInt(incomeComp.toFixed(2)),
-    prevMonthSaving:parseInt(savingValComp.toFixed(2))}));
-  }    
-call();
-},[dispatch]);
+  const [dateVal, setDateVal] = useState<Date | null | undefined>();
+  const incomeVal = useSelector((state: any) => state.monthlyDataReducer.income);
+  const expenseVal = useSelector((state: any) => state.monthlyDataReducer.expense);
+  const savingsVal = useSelector((state: any) => state.monthlyDataReducer.moneySaved);
+  const incomComp = useSelector((state: any) => state.monthlyDataReducer.prevMonthIncomeComp);
+  const expenseComp = useSelector((state: any) => state.monthlyDataReducer.prevMonthExpenseComp);
+  const savingComp = useSelector((state: any) => state.monthlyDataReducer.prevMonthSavingComp);
+
+  const data = [
+    { title: 'Income', value: incomeVal, diff: incomComp, icon: incomComp > 0 ? 'up' : 'down' },
+    { title: 'Expense', value: expenseVal, diff: expenseComp, icon: expenseComp > 0 ? 'up' : 'down' },
+    { title: 'Savings', value: savingsVal, diff: savingComp, icon: savingComp > 0 ? 'up' : 'down' },
+  ];
+
+  const calcDiff = (currMonth: number, lastMonthData: number): number => {
+    let newVal: number =currMonth - lastMonthData;
+    console.log("currMonth", currMonth);
+    console.log("lastMonthData", lastMonthData);
+    let dataValue:number =parseInt(String((newVal / lastMonthData) * 100));
+    console.log("dataValue", dataValue);
+    dataValue < 0 && (dataValue = 0);
+    return dataValue;
+  };
+
+  const handleChange = async (e: any) => {
+    const selectedDate = new Date(e);
+    console.log(selectedDate);
+    const dateString = format(selectedDate, "MM/dd/yyyy");
+    const { data: resultData } = await apiCall<MonthData>('GET', '/particularMonthData', undefined, {
+      dateVal: dateString,
+      useremail: localStorage.getItem("useremail"),
+      userId: localStorage.getItem("uid"),
+    });
+    console.log("currentMonthResult", resultData);
+    const prevMonthDate = subMonths(selectedDate, 1);
+    console.log("prevMonthDate", prevMonthDate);
+    const lastMonthDateString = format(prevMonthDate, 'MM/dd/yyyy');
+    console.log(lastMonthDateString,"*****54*****");
+    const { data: prevMonthResult } = await apiCall<MonthData>('GET', '/particularMonthData', undefined, {
+      dateVal: lastMonthDateString,
+      useremail: localStorage.getItem("useremail"),
+      userId: localStorage.getItem("uid"),
+    });
+    console.log("prevMonthResult", prevMonthResult);
+    let expenseVal: number = parseInt(String(resultData?.Expense || 0));
+    let incomeVal: number = parseInt(String(resultData?.Income || 0));
+    let currSavings: number = incomeVal - expenseVal;
+    currSavings < 0 && (currSavings = 0);
+    let prevMonthExpense:number = parseInt(String(prevMonthResult?.Expense || 0));
+    let prevMonthIncome:number = parseInt(String(prevMonthResult?.Income || 0));
+    let prevMonthSavingNumber: number = prevMonthIncome - prevMonthExpense;
+    console.log("prevMonthSavingNumber", prevMonthSavingNumber);
+    prevMonthSavingNumber < 0 && (prevMonthSavingNumber = 0);
+    let prevMonthSavingComp: number = parseFloat(calcDiff(currSavings, prevMonthSavingNumber).toFixed(2));
+    console.log("prevMonthSavingNumber", prevMonthSavingNumber);
+    console.log("currentSavingNumber", currSavings);
+
+
+    dispatch(
+      setMonthlyData({
+        expense: expenseVal,
+        income: incomeVal,
+        savingVal: currSavings,
+        prevMonthExpense: Number(Math.floor(prevMonthExpense)),
+        prevMonthIncome: Number(Math.floor(prevMonthIncome)),
+        prevMonthSaving: Number(prevMonthSavingComp),
+      })
+    );
+  };
+
+  useEffect(() => {
+    const call = async () => {
+      const dateString = format(new Date(), "MM/dd/yyyy");
+      const { data: currMonthData } = await apiCall<MonthData>('GET', '/particularMonthData', undefined, {
+        dateVal: dateString,
+        useremail: localStorage.getItem("useremail"),
+        userId: localStorage.getItem("uid"),
+      });
+      const prevMonthDateString = format(subMonths(new Date(), 1), "MM/dd/yyyy");
+      const { data: prevMonthData } = await apiCall<MonthData>('GET', '/particularMonthData', undefined, {
+        dateVal: prevMonthDateString,
+        userId: localStorage.getItem("uid"),
+      });
+      const savingValue: number = parseInt(String(currMonthData?.Income || 0)) - parseInt(String(currMonthData?.Expense || 0));
+      const incomeVal: number = parseInt(String(currMonthData?.Income || 0));
+      const expenseVal: number = parseInt(String(currMonthData?.Expense || 0));
+      const incomeComp = calcDiff(parseInt(String(currMonthData?.Income || 0)), parseInt(String(prevMonthData?.Income || 0)));
+      const expenseComp = calcDiff(parseInt(String(currMonthData?.Expense || 0)), parseInt(String(prevMonthData?.Expense || 0)));
+      const prevSavingVal: number = parseInt(String(prevMonthData?.Income || 0)) - parseInt(String(prevMonthData?.Expense || 0));
+      const savingValComp: number = parseFloat(String(calcDiff(savingValue, prevSavingVal)));
+      console.log("savingValComp", savingValComp);
+
+      dispatch(
+        setMonthlyData({
+          expense: expenseVal,
+          income: incomeVal,
+          savingVal: savingValue,
+          prevMonthExpense: parseInt(expenseComp.toFixed(2)),
+          prevMonthIncome: parseInt(incomeComp.toFixed(2)),
+          prevMonthSaving: Number(savingValComp.toFixed(2)),
+        })
+      );
+    };
+    call();
+  }, [dispatch]);
   const stats = data.map((stat) => {
-    const DiffIcon = stat.diff > 0 ?ArrowRightUp:ArrowRightDown;
+    const DiffIcon = stat.diff > 0 ? ArrowRightUp : ArrowRightDown;
     return (
-      <Paper withBorder p="md" radius="md" key={stat.title}>
-      <Group justify="apart">
-        <div>
-          <Text c="dimmed" tt="uppercase" fw={700} fz="xs" className={styles.label}>
-            {stat.title}
-          </Text>
-          <Text fw={700} fz="5xl" size={"5xl"} c={"#000"}>
-          ₹ <CountUp start={0} end={stat.value} duration={1}/>
-          </Text>
-        </div>
-        <ThemeIcon
+      <Paper withBorder p={{ base: 'sm', sm: 'md' }} radius="md" key={stat.title} className={styles.statCard}>
+        <Group justify="apart" wrap="nowrap">
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <Text c="dimmed" tt="uppercase" fw={700} fz="xs" className={styles.label}>
+              {stat.title}
+            </Text>
+            <Text className={styles.statValue} fw={700} c={"dark"}>
+              ₹ <CountUp start={0} end={stat.value} duration={1} separator="," />
+            </Text>
+          </div>
+          <ThemeIcon
             color="slate"
             variant="light"
-            style={{
-              color: stat.diff > 0 ? 'var(--mantine-color-teal-6)' : 'var(--mantine-color-red-6)',
-            }}
-            size={38}
+            size={"lg"}
             radius="md"
-            pt={"8"}
           >
-            <DiffIcon  stroke={'1.5'} />
+            <DiffIcon stroke={'2.6'} />
           </ThemeIcon>
-      </Group>
-        <Text c="dimmed" fz="sm" mt="md">
-        <Text component="span" c={stat.diff > 0 ? 'teal' : 'red'} fw={700}>
-          {isNaN(stat.diff)?'N/A':`${stat.diff}%`}
-        </Text>{' '}
-        {isNaN(stat.diff)?'Data not available':(stat.diff > 0 ? 'increase compared to last month' : 'decrease compared to last month')}
-      </Text>
-    </Paper>
+        </Group>
+        <Text c="dimmed" fz="xs" mt="sm">
+          <Text component="span" c={stat.diff > 0 ? 'teal' : 'red'} fw={700}>
+            {isNaN(stat.diff) ? null : `${stat.diff}%`}
+          </Text>{' '}
+          {isNaN(stat.diff) ? 'Data not available' : (stat.diff > 0 ? 'increase vs last month' : 'decrease vs last month')}
+        </Text>
+      </Paper>
     );
   });
+
   return (
-   <>
-    <div className={styles['subHeading']}>
-    <div style={{fontWeight:'600',fontSize:'1.2rem',margin:'0',letterSpacing:'0.2px'}}>
-     Monthly Stats 
-    </div>
-  <MonthPickerInput
-     placeholder="Pick Month"
-     clearable
-     className={styles.pickerWrapper}
-     leftSection={<i className="uil uil-calender" style={{color:'#000',fontSize:'16px'}}></i>}
-     value={dateVal}
-     onChange={handleChange}
-     defaultValue={new Date()}
-     /> 
-     </div>
-  <SimpleGrid cols={{ base: 1, sm: 3 }}>{stats}</SimpleGrid>
-     </>
-)};
+    <>
+      <div className={styles['subHeading']}>
+        <div className={styles['headingTitle']}>
+          Monthly Stats
+        </div>
+        <MonthPickerInput
+          placeholder="Pick Month"
+          clearable
+          className={styles.pickerWrapper}
+          leftSection={<i className="uil uil-calender" style={{ color: '#000', fontSize: '16px' }}></i>}
+          value={dateVal}
+          onChange={handleChange}
+          defaultValue={new Date()}
+        />
+      </div>
+      <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing={{ base: 'sm', sm: 'md' }}>
+        {stats}
+      </SimpleGrid>
+    </>
+  )};
 export default React.memo(MonthlyGoal);

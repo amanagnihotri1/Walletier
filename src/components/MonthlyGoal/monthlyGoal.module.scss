@@ -12,7 +12,7 @@
     width: 60%;
     margin-top: 20px;
   }
-  .value {
+  .statValue {
     font-size: 24px;
     font-weight: 600;
     line-height: 1;
@@ -44,3 +44,6 @@
     justify-content: space-between;
     align-items: center;
   }
+.statCard{
+  background-color: #fff !important;
+}

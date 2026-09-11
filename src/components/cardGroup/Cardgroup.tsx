@@ -1,32 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-useless-concat */
 import style from "../cardGroup/cardgroup.module.scss";
-import '@mantine/core/styles/Badge.css';
-import '@mantine/core/styles/Tooltip.css';
-import React from "react";
+import React, { useEffect } from "react";
 import CountUp from 'react-countup';
-import axios from "axios";
 import coinImage from "../../assets/coin.png";
-import {ReactComponent as ExpenseImage} from "../../assets/expense_svg.svg"; 
-import {Badge,Tooltip } from '@mantine/core';
+import { ReactComponent as ExpenseImage } from "../../assets/expense_svg.svg"; 
+import { Badge, Tooltip } from '@mantine/core';
 import savingBag from "../../assets/savings1.png";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Sparkline } from '@mantine/charts';
 import { Expensegraph } from '../ExpenseGraph/Expensegraph';
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import {setIncome,setExpense} from "./cardSlice";
+import { setIncome, setExpense } from "./cardSlice";
+import apiCall from '../../utils/apiService';
+import { DailyData } from '../../app/TypeInterfaces';
+
 const Cardgroup = () => {
-  const dispatch=useDispatch();
-  const expenseValue=useSelector((state:any)=>state.cardSlice.expenses);
-  const incomeValue=useSelector((state:any)=>state.cardSlice.income);
-  const getCardData=async()=>
-  {
-    const data:any=await axios.get(`${process.env.REACT_APP_BASE_URL}/getdailydata?useremail=${localStorage.getItem('useremail')}`);
-    console.log(data);
-    dispatch(setExpense(data.data.Expense));
-    dispatch(setIncome(data.data.Income));
-  }
+  const dispatch = useDispatch();
+  const expenseValue = useSelector((state: any) => state.cardSlice.expenses);
+  const incomeValue = useSelector((state: any) => state.cardSlice.income);
+
+  const getCardData = async () => {
+    const { data } = await apiCall<DailyData>('GET', '/getdailydata', undefined, {
+      useremail: localStorage.getItem('useremail'),
+      userId: localStorage.getItem('uid'),
+    });
+    if (data) {
+      dispatch(setExpense(data.Expense || 0));
+      dispatch(setIncome(data.Income || 0));
+    }
+  };
 
   useEffect(()=>
   {

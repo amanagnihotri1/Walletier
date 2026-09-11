@@ -1,23 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-interface authDetails
-{
-  fullName?:     string | null;
-  useremail?:    string | null;
+interface authDetails {
+  fullName?: string | null;
+  useremail?: string | null;
   profileImage?: string | null;
-  uid?:          string | null;
-  token?:        string | null;
-  monthlyGoal?:  number | null;
-  error?:        string;
-};
-export const initialState:authDetails=
-{
-fullName:" " || localStorage.getItem("fullName"),
-useremail:" ",
-profileImage:" " || localStorage.getItem("profileImage"),
-error:" ",
-uid:localStorage.getItem("uid"),
-token:localStorage.getItem("tknum"),
-monthlyGoal: null,
+  uid?: string | null;
+  token?: string | null;
+  monthlyGoal?: number | null;
+  error?: string | null;
+}
+
+export const initialState: authDetails = {
+  fullName: localStorage.getItem("fullName") || null,
+  useremail: localStorage.getItem("useremail") || null,
+  profileImage: localStorage.getItem("profileImage") || null,
+  error: null,
+  uid: localStorage.getItem("uid"),
+  token: localStorage.getItem("tknum"),
+  monthlyGoal: null,
 };
 export const authSlice=createSlice({
     name:'userinfo',
@@ -38,17 +37,16 @@ export const authSlice=createSlice({
    {
     state.fullName="";
     state.useremail="";
-    state.error="";
-    state.uid="";
-    state.profileImage="";
-    state.token="";
-    state.monthlyGoal=0;
-    },
-  setError:(state,action:PayloadAction<string>)=>
-  {
-    state.error=action.payload;
+    state.error = null;
+    state.uid = "";
+    state.profileImage = "";
+    state.token = "";
+    state.monthlyGoal = 0;
   },
-}
+  setError: (state, action: PayloadAction<string | null>) => {
+    state.error = action.payload;
+  },
+},
 });
-export const {setAuthDetails,clearAuthDetails,setError}=authSlice.actions;
+export const { setAuthDetails, clearAuthDetails, setError } = authSlice.actions;
 export default authSlice.reducer;

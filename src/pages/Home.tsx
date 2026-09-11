@@ -1,18 +1,14 @@
 import React from 'react';
-import '@mantine/core/styles/global.css';
-import '@mantine/core/styles/Button.css';
-import '@mantine/core/styles/UnstyledButton.css';
-import '@mantine/carousel/styles.css';
 import style from "../pages/home.module.scss";
-import '@mantine/dates/styles.css';
-import '@mantine/core/styles/Text.css';
 import { Navbar } from '../components/Navbar/Navbar';
 import MonthlyGoal from '../components/MonthlyGoal/MonthlyGoal';
-import { useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Transactions } from '../components/Transactions/Transactions';
-import Cardgroup  from '../components/cardGroup/Cardgroup';
+import Cardgroup from '../components/cardGroup/Cardgroup';
+import { RootState } from '../app/store';
+
 export const Home = () => {
-const authid:any=useSelector((state:any)=>state.authReducer.authuid);
+  const authid = useSelector((state: RootState) => state.authReducer.uid);
   return (
     <div className={style["mainWrapper"]}>
     <Navbar />

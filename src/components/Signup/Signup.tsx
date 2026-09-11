@@ -1,53 +1,57 @@
-import React,{useState} from 'react';
-import axios from 'axios';
-import '@mantine/core/styles.css';
-import '@mantine/core/styles/LoadingOverlay.css';
-import { TextInput,Button,PasswordInput,LoadingOverlay} from '@mantine/core';
-import '@mantine/core/styles/global.css';
-import '@mantine/core/styles/UnstyledButton.css';
-import '@mantine/core/styles/Button.css'
-import '@mantine/core/styles/Overlay.css';
+import React, { useState } from 'react';
+import apiCall from '../../utils/apiService';
+import { SignupResponse } from '../../app/TypeInterfaces';
+import { TextInput, Button, PasswordInput, LoadingOverlay } from '@mantine/core';
 import style from '../Signup/Signup.module.scss';
-// import {ReactComponent as Googleicon} from "../../assets/googleicon.svg";
-import '@mantine/core/styles/PasswordInput.css';
-import '@mantine/core/styles/Divider.css'
-import '@mantine/core/styles/Input.css';
 import logo from "../../assets/happy.gif";
-import { useNavigate,Link} from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { notifications } from '@mantine/notifications';
+
 export const Signup = () => { 
-  const[userData,setUser]=useState({
-  fullName:'',
-  email:'',
-  password:'',  
+  const [userData, setUser] = useState({
+    fullName: '',
+    email: '',
+    password: '',  
   });
-  const[isLoading,setLoading]=useState<boolean>(false);
-  const navigate=useNavigate();
-const handleClick=async()=>
-{ 
-  setLoading(true);
-  try
-  { 
-    const{email,password,fullName}=userData;
-    const userCred=await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/signup`,{useremail:email,userpassword:password,userName:fullName});
-    console.log(userCred);
-    userCred && notifications.show({
-      title: 'User created succesfully',
-      message: 'You can login now',
-      autoClose:2000
-    }); 
-    userCred && navigate("/auth/login");
-    setLoading(!isLoading);
-  }catch(err:any)
-  {
-    notifications.show({
-      title: 'Error detected',
-      message: err.message,
-      autoClose:2000
-    }); 
-    setLoading(false);
-  }
-} 
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const handleClick = async () => { 
+    setLoading(true);
+    try { 
+      const { email, password, fullName } = userData;
+      const { data: userCred, error } = await apiCall<SignupResponse>('POST', '/auth/signup', {
+        useremail: email,
+        userpassword: password,
+        userName: fullName,
+      });
+
+      if (error || !userCred) {
+        notifications.show({
+          title: 'Error detected',
+          message: error || 'Failed to signup',
+          autoClose: 2000,
+        });
+        setLoading(false);
+        return;
+      }
+
+      notifications.show({
+        title: 'User created succesfully',
+        message: 'You can login now',
+        autoClose: 2000,
+      }); 
+      navigate("/auth/login");
+      setLoading(false);
+    } catch (err: any) {
+      notifications.show({
+        title: 'Error detected',
+        message: err.message,
+        autoClose: 2000,
+      }); 
+      setLoading(false);
+    }
+  }; 
 // This will return back
 // const handleLogin=useGoogleLogin({ 
 //  onSuccess: async(tokenResponse) =>{

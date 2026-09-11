@@ -1,29 +1,22 @@
-import {Button} from '@mantine/core';
-import '@mantine/core/styles/global.css';
-import '@mantine/core/styles.css';
-import '@mantine/core/styles/Divider.css';
-import '@mantine/core/styles/Drawer.css';
-import '@mantine/core/styles/ActionIcon.css'
-import '@mantine/core/styles/NavLink.css';
+import { Button } from '@mantine/core';
 import style from "../../components/Navbar/navbar.module.scss";
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import brandLogo from "../../assets/wallet.png";
 import userlogo from "../../assets/user_image.png";
-import {useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { clearAuthDetails } from '../../Auth/authSlice';
+import apiCall from '../../utils/apiService';
+
 export const Navbar = () => {
-const navigate=useNavigate();
-const dispatch=useDispatch();
-const HandleLogout=async()=>
-  {
-    console.log("logout called",process.env.REACT_APP_BASEURL);
-    const data=await axios.get(`${process.env.REACT_APP_BASE_URL}/auth/logout`);
-    console.log(data);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const HandleLogout = async () => {
+    await apiCall('GET', '/auth/logout');
     navigate("/welcome");
     dispatch(clearAuthDetails());
     localStorage.clear();
-  } 
+  }; 
   const userName= localStorage.getItem("fullName");
   const userprofile=userlogo || localStorage.getItem("profileImage");
   return (

@@ -1,53 +1,69 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import '@mantine/core/styles/Notification.css';
-import axios from 'axios';
-import React,{useState} from 'react';
-import '@mantine/core/styles/Loader.css';
+import React, { useState } from 'react';
 import brandLogo from "../../assets/wallet.png";
-import '@mantine/core/styles/LoadingOverlay.css';
-import { TextInput,PasswordInput,Button,LoadingOverlay,Checkbox,Text} from '@mantine/core';
+import { TextInput, PasswordInput, Button, LoadingOverlay, Checkbox, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useDispatch,useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import style from "../Login/login.module.scss";
 import { notifications } from '@mantine/notifications';
 import { setAuthDetails } from '../../Auth/authSlice';
-export const Login= () => {
- const navigate=useNavigate();
- const dispatch=useDispatch();
- const useremail=useSelector((state:any)=>state.authReducer.useremail);
- const[visible,{toggle}]=useDisclosure(false);
- const[isLoading,setLoading]=useState(false);
- const[agreeVal,setAgreeValue]=useState('');
- const[userinfo,setUserInfo]=useState<{email:string; password:string}>({
-  email:'',
-  password:''
-});
-const handleClick=async()=>
-{   
-  try
-  {   
-       const{email,password}=userinfo;
-       const usermain:any=await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/login`,{userEmail:email,userPass:password},{withCredentials:true});
-       localStorage.setItem("tknum",usermain.data.token);
-       localStorage.setItem("uid",usermain.data.userDetails._id);
-       localStorage.setItem("useremail",usermain.data.userDetails.email);
-       localStorage.setItem("fullName",usermain.data.userDetails.fullName);
-       localStorage.setItem("profileImage",usermain.data.userDetails.profileImage);
-       dispatch(setAuthDetails({
-         useremail: usermain.data.userDetails.email, fullName: usermain.data.userDetails?.fullName, uid: usermain.data.userDetails._id, token: usermain.data.token,
-         profileImage: usermain.data.userDetails.profileImage,
-         monthlyGoal: usermain.data.userDetails.monthlyGoal,
-         error: ''
-       }));
-       usermain.data.userDetails && navigate(`/user/${localStorage.getItem("uid")}`);
-       notifications.show({title:"Success",message:"User loggedin successfully"});
+import apiCall from '../../utils/apiService';
+import { LoginResponse } from '../../app/TypeInterfaces';
+
+export const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const useremail = useSelector((state: any) => state.authReducer.useremail);
+  const [visible, { toggle }] = useDisclosure(false);
+  const [isLoading, setLoading] = useState(false);
+  const [agreeVal, setAgreeValue] = useState('');
+  const [userinfo, setUserInfo] = useState<{ email: string; password: string }>({
+    email: '',
+    password: '',
+  });
+
+  const handleClick = async () => {
+    try {
+      setLoading(true);
+      const { email, password } = userinfo;
+      const { data, error } = await apiCall<LoginResponse>('POST', '/auth/login', {
+        userEmail: email,
+        userPass: password,
+      });
+
+      if (error || !data) {
+        notifications.show({ title: "Error, try again", message: error || "Login failed" });
+        setLoading(false);
+        return;
       }
-      catch(err:any)
-      {
-        notifications.show({title:"Error,try again",message:err.message});
-      }
-  }
+
+      localStorage.setItem("tknum", data.token);
+      localStorage.setItem("uid", data.userDetails._id);
+      localStorage.setItem("useremail", data.userDetails.email);
+      localStorage.setItem("fullName", data.userDetails.fullName);
+      localStorage.setItem("profileImage", data.userDetails.profileImage || "");
+
+      dispatch(
+        setAuthDetails({
+          useremail: data.userDetails.email,
+          fullName: data.userDetails.fullName,
+          uid: data.userDetails._id,
+          token: data.token,
+          profileImage: data.userDetails.profileImage,
+          monthlyGoal: data.userDetails.monthlyGoal,
+          error: '',
+        })
+      );
+
+      data.userDetails && navigate(`/user/${data.userDetails._id}`);
+      notifications.show({ title: "Success", message: "User logged in successfully" });
+    } catch (err: any) {
+      notifications.show({ title: "Error, try again", message: err.message });
+    } finally {
+      setLoading(false);
+    }
+  };
  return (
    <div className={style['loginbackground']}>
     <div className={style['loginWrapper']}>
@@ -61,8 +77,8 @@ const handleClick=async()=>
       <img src={brandLogo} alt="not_found" width={50} height={50}/>
       </div>
     <div className={style['leftForm']}>
-    <Text className={style['headingTitle']} fw={700} variant={'gradient'}
-     gradient={{ from: 'violet', to: 'rgba(56, 55, 55, 1)', deg: 147 }}
+    <Text className={style['headingTitle']} fw={700} variant="gradient"
+      gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
     >Login</Text>
     <TextInput
       label="Email ID"

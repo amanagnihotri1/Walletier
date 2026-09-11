@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import '@mantine/core/styles/Notification.css';
-import axios from 'axios';
 import React, { useState } from 'react';
-import '@mantine/core/styles/Loader.css';
 import brandLogo from "../../assets/wallet.png";
-import '@mantine/core/styles/LoadingOverlay.css';
-import { TextInput, Button, LoadingOverlay, Text, Stack} from '@mantine/core';
+import { TextInput, Button, LoadingOverlay, Text, Stack } from '@mantine/core';
 import { Link, useNavigate } from 'react-router-dom';
 import style from "../forgetPassword/forgetpassword.module.scss";
 import { notifications } from '@mantine/notifications';
+import apiCall from '../../utils/apiService';
+
 export const ForgetPassword = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -40,28 +38,31 @@ export const ForgetPassword = () => {
       setLoading(true);
       console.log("Sending password reset email...");
       
-      const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/auth/passwordrequest`,
-        { email },
-        { withCredentials: true }
-      );
-      setIsSubmitted(true);
-      notifications.show({
-        title: "Success",
-        message: "Password reset link has been sent to your email",
-        color: 'teal',
-        autoClose: 5000
-      });
+      const { data, error } = await apiCall('POST', '/auth/passwordrequest', { email });
 
-
+      if (error) {
+        setEmailError(error);
+        notifications.show({
+          title: "Error",
+          color: 'red',
+          message: error,
+          autoClose: 3000,
+        });
+      } else {
+        setIsSubmitted(true);
+        notifications.show({
+          title: "Success",
+          message: "Password reset link has been sent to your email",
+          color: 'teal',
+          autoClose: 5000,
+        });
+      }
     } catch (err: any) {
       console.error("Error sending reset email:", err);
-      setEmailError(err.response?.data?.message || 'Failed to send reset link. Please try again.');  
+      setEmailError(err.message || 'Failed to send reset link. Please try again.');  
       notifications.show({
         title: "Error",
-        color:'red',
-        message: err.response?.data?.message || 'Something went wrong. Please try again.',
-        autoClose: 3000
+        message:`${err.message}`
       });
     } finally {
       setLoading(false);
@@ -113,13 +114,12 @@ export const ForgetPassword = () => {
                 <TextInput
                   label="Email Address"
                   placeholder="Enter your email address"
-                  leftSection={<i className="uil uil-envelope-check"></i>}
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
                     setEmailError('');
                   }}
-                  onKeyPress={handleKeyPress}
+                  onKeyDown={handleKeyPress}
                   error={emailError || false}
                   disabled={isLoading}
                   classNames={{
